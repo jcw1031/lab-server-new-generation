@@ -26,8 +26,9 @@ public class UserService {
     }
 
     public String signIn(final SignInRequestDTO signInRequestDTO) {
+        System.out.println("UserService.signIn");
         User user = userRepository.findByStudentId(signInRequestDTO.getStudentId())
-                .orElseThrow(() -> new AuthException(ErrorCode.STUDENT_ID_DUPLICATE));
+                .orElseThrow(() -> new AuthException(ErrorCode.USER_NOT_FOUND));
 
         if (!encoder.matches(signInRequestDTO.getPassword(), user.getPassword())) { // 순서 주의
             throw new AuthException(ErrorCode.INVALID_PASSWORD);

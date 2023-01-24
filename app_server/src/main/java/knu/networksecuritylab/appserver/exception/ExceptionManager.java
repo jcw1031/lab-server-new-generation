@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionManager {
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ErrorResponseDTO> appExceptionHandler(AuthException e) {
+    public ResponseEntity<ErrorResponseDTO> authExceptionHandler(AuthException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(ErrorResponseDTO.builder()
                         .statusCode(e.getErrorCode().getHttpStatus().value())
-                        .errorType(e.getErrorCode().getHttpStatus().toString())
-                        .message(e.getMessage())
+                        .errorType(e.getErrorCode().name())
+                        .message(e.getErrorCode().getMessage())
                         .build());
     }
 }
