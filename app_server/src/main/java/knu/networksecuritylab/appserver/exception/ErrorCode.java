@@ -10,7 +10,8 @@ public enum ErrorCode {
 
     STUDENT_ID_DUPLICATE(HttpStatus.CONFLICT, "이미 가입된 학번입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 학번의 회원이 존재하지 않습니다."),
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다.");
 
     private HttpStatus httpStatus;
     private String message;
