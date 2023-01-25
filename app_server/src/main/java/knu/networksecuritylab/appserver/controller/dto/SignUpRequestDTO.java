@@ -18,6 +18,7 @@ public class SignUpRequestDTO {
 
     @Column(unique = true)
     @NotBlank(message = "학번은 비어있을 수 없습니다.")
+    @Pattern(regexp = "^\\d{9}$", message = "학번 형식이 맞지 않습니다. (9자리 정수)")
     private String studentId;
     @NotBlank(message = "비밀번호는 비어있을 수 없습니다.")
     @Size(min = 6, max = 20, message = "비밀번호는 6자 이상, 20자 이하입니다..")
