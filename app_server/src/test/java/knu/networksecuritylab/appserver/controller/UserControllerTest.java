@@ -2,6 +2,7 @@ package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import knu.networksecuritylab.appserver.controller.dto.SignInRequestDTO;
+import knu.networksecuritylab.appserver.controller.dto.SignUpRequestDTO;
 import knu.networksecuritylab.appserver.exception.AuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
@@ -31,6 +32,48 @@ class UserControllerTest {
 
     @MockBean
     UserService userService;
+
+    @Test
+    @DisplayName("회원가입 성공")
+    @WithMockUser
+    void signUpSuccess() throws Exception {
+        when(userService.join(any()))
+                .thenReturn("sign-up success");
+
+        mockMvc.perform(post("/api/v1/users/sign-up")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                                .studentId("201901689")
+                                .password("woopaca")
+                                .email("jcw001031@gmail.com")
+                                .phone("010-9517-1530")
+                                .name("지찬우")
+                                .build())))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("회원가입 실패 - studentId 중복")
+    @WithMockUser
+    void signUpFailStudentId() throws Exception {
+        when(userService.join(any()))
+                .thenThrow(new AuthException(ErrorCode.STUDENT_ID_DUPLICATE));
+
+        mockMvc.perform(post("/api/v1/users/sign-up")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                                .studentId("201901689")
+                                .password("woopaca")
+                                .email("jcw001031@gmail.com")
+                                .phone("010-9517-1530")
+                                .name("지찬우")
+                                .build())))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
 
     @Test
     @DisplayName("로그인 성공")
@@ -66,5 +109,23 @@ class UserControllerTest {
                         .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - password 틀림")
+    @WithMockUser
+    void loginFailPassword() throws Exception {
+        String studentId = "201901689";
+        String password = "woopaca";
+
+        when(userService.signIn(any()))
+                .thenThrow(new AuthException(ErrorCode.INVALID_PASSWORD));
+
+        mockMvc.perform(post("/api/v1/users/sign-in")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }
