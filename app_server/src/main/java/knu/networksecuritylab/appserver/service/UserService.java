@@ -22,11 +22,18 @@ public class UserService {
     private final SecretKey secretKey;
 
     public String join(final SignUpRequestDTO signUpRequestDTO) {
-        return "";
+        userRepository.findByStudentId(signUpRequestDTO.getStudentId())
+                .ifPresent(user -> {
+                    throw new AuthException(ErrorCode.STUDENT_ID_DUPLICATE);
+                });
+
+        User user = signUpRequestDTO.toEntity(encoder);
+        userRepository.save(user);
+
+        return "sign-up success";
     }
 
     public String signIn(final SignInRequestDTO signInRequestDTO) {
-        System.out.println("UserService.signIn");
         User user = userRepository.findByStudentId(signInRequestDTO.getStudentId())
                 .orElseThrow(() -> new AuthException(ErrorCode.USER_NOT_FOUND));
 

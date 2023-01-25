@@ -44,16 +44,15 @@ public class JwtFilter extends OncePerRequestFilter {
         if (JwtUtil.isExpired(token, secretKey)) {
             log.error("Token이 만료되었습니다.");
             filterChain.doFilter(request, response);
-            return;
         }
 
-        // username 추출
-        String username = JwtUtil.getStudentId(token, secretKey);
-        log.info("username = {}", username);
+        // studentId 추출
+        String studentId = JwtUtil.getStudentId(token, secretKey);
+        log.info("studentId = {}", studentId);
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority("USER"))); // DB에서 회원의 role을 꺼내서 넣을 수 있음
+                new UsernamePasswordAuthenticationToken(studentId, null, List.of(new SimpleGrantedAuthority("USER"))); // DB에서 회원의 role을 꺼내서 넣을 수 있음
 
         // 디테일 추가
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,14 +1,17 @@
 package knu.networksecuritylab.appserver.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import knu.networksecuritylab.appserver.exception.AuthException;
+import knu.networksecuritylab.appserver.exception.ErrorCode;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class JwtUtil {
 
-    private static final Long expireTimeMs = 1000 * 60 * 60L;
+    private static final Long expireTimeMs = 10000L;
 
     public static String createToken(Long id, String studentId, final SecretKey secretKey) {
         Claims claims = Jwts.claims();
@@ -33,12 +36,18 @@ public class JwtUtil {
     }
 
     public static boolean isExpired(String token, SecretKey secretKey) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration()
-                .before(new Date());
+        boolean result;
+        try {
+            result = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new AuthException(ErrorCode.TOKEN_EXPIRED);
+        }
+        return result;
     }
 }
