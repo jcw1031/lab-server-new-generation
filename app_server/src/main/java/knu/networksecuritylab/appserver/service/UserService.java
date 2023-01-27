@@ -1,7 +1,7 @@
 package knu.networksecuritylab.appserver.service;
 
-import knu.networksecuritylab.appserver.controller.dto.SignInRequestDTO;
-import knu.networksecuritylab.appserver.controller.dto.SignUpRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDTO;
 import knu.networksecuritylab.appserver.entity.User;
 import knu.networksecuritylab.appserver.exception.AuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
@@ -21,16 +21,16 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     private final SecretKey secretKey;
 
-    public String join(final SignUpRequestDTO signUpRequestDTO) {
+    public Long join(final SignUpRequestDTO signUpRequestDTO) {
         userRepository.findByStudentId(signUpRequestDTO.getStudentId())
                 .ifPresent(user -> {
                     throw new AuthException(ErrorCode.STUDENT_ID_DUPLICATE);
                 });
 
         User user = signUpRequestDTO.toEntity(encoder);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        return "sign-up success";
+        return savedUser.getId();
     }
 
     public String signIn(final SignInRequestDTO signInRequestDTO) {

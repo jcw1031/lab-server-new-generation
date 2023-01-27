@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.controller.dto;
+package knu.networksecuritylab.appserver.controller.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

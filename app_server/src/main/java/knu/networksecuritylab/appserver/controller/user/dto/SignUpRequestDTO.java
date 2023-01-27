@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.controller.dto;
+package knu.networksecuritylab.appserver.controller.user.dto;
 
 import knu.networksecuritylab.appserver.entity.User;
 import lombok.Builder;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -16,7 +15,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class SignUpRequestDTO {
 
-    @Column(unique = true)
     @NotBlank(message = "학번은 비어있을 수 없습니다.")
     @Pattern(regexp = "^\\d{9}$", message = "학번 형식이 맞지 않습니다. (9자리 정수)")
     private String studentId;

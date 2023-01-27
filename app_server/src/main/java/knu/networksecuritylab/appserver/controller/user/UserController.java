@@ -1,7 +1,7 @@
-package knu.networksecuritylab.appserver.controller;
+package knu.networksecuritylab.appserver.controller.user;
 
-import knu.networksecuritylab.appserver.controller.dto.SignInRequestDTO;
-import knu.networksecuritylab.appserver.controller.dto.SignUpRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDTO;
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -21,7 +22,8 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@Valid @RequestBody final SignUpRequestDTO signUpRequestDTO) {
-        return ResponseEntity.ok().body(userService.join(signUpRequestDTO));
+        Long joinUserId = userService.join(signUpRequestDTO);
+        return ResponseEntity.created(URI.create("/api/v1/users/" + joinUserId)).body("login success");
     }
 
     @PostMapping("/sign-in")

@@ -1,8 +1,8 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.controller.dto.SignInRequestDTO;
-import knu.networksecuritylab.appserver.controller.dto.SignUpRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDTO;
 import knu.networksecuritylab.appserver.exception.AuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
