@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BookRegisterRequestDTO {
+public class BookRegisterRequestDto {
 
     @NotBlank(message = "책 이름은 비어있을 수 없습니다.")
     private String bookName;

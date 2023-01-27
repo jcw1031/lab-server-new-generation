@@ -1,8 +1,8 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDTO;
-import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDTO;
+import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.exception.AuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
@@ -43,7 +43,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                        .content(mapper.writeValueAsBytes(SignUpRequestDto.builder()
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
@@ -64,7 +64,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                        .content(mapper.writeValueAsBytes(SignUpRequestDto.builder()
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
@@ -88,7 +88,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(username, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(username, password))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -106,7 +106,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(studentId, password))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -124,7 +124,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(studentId, password))))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }

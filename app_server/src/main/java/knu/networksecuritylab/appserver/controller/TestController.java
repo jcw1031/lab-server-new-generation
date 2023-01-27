@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.controller;
 
-import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDTO;
+import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +14,8 @@ import javax.validation.Valid;
 public class TestController {
 
     @PostMapping
-    public ResponseEntity<String> bookRegister(@Valid @RequestBody BookRegisterRequestDTO bookRegisterRequestDTO) {
-        System.out.println("bookRegisterRequestDTO = " + bookRegisterRequestDTO);
+    public ResponseEntity<String> bookRegister(@Valid @RequestBody BookRegisterRequestDto bookRegisterRequestDto) {
+        System.out.println("bookRegisterRequestDto = " + bookRegisterRequestDto);
         return ResponseEntity.ok().body("책 등록 완료");
     }
 }

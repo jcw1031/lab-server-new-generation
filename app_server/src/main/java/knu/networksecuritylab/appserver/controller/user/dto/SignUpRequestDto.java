@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
-public class SignUpRequestDTO {
+public class SignUpRequestDto {
 
     @NotBlank(message = "학번은 비어있을 수 없습니다.")
     @Pattern(regexp = "^\\d{9}$", message = "학번 형식이 맞지 않습니다. (9자리 정수)")
@@ -28,7 +28,7 @@ public class SignUpRequestDTO {
     private String phone;
 
     @Builder
-    public SignUpRequestDTO(String studentId, String password, String email, String name, String phone) {
+    public SignUpRequestDto(String studentId, String password, String email, String name, String phone) {
         this.studentId = studentId;
         this.password = password;
         this.email = email;
