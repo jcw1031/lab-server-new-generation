@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.exception;
 
+import knu.networksecuritylab.appserver.exception.custom.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

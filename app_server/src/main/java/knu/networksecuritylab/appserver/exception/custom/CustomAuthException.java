@@ -1,5 +1,6 @@
-package knu.networksecuritylab.appserver.exception;
+package knu.networksecuritylab.appserver.exception.custom;
 
+import knu.networksecuritylab.appserver.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

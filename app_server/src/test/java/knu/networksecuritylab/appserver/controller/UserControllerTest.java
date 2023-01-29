@@ -3,7 +3,7 @@ package knu.networksecuritylab.appserver.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
-import knu.networksecuritylab.appserver.exception.CustomAuthException;
+import knu.networksecuritylab.appserver.exception.custom.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
 import org.junit.jupiter.api.DisplayName;
