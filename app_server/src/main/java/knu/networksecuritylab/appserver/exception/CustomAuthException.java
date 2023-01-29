@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AuthException extends RuntimeException {
+public class CustomAuthException extends RuntimeException {
 
     private ErrorCode errorCode;
 }

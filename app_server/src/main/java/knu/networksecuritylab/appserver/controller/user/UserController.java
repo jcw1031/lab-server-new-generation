@@ -23,7 +23,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@Valid @RequestBody final SignUpRequestDto signUpRequestDto) {
         Long joinUserId = userService.join(signUpRequestDto);
-        return ResponseEntity.created(URI.create("/api/v1/users/" + joinUserId)).body("login success");
+        return ResponseEntity.created(URI.create("/api/v1/users/" + joinUserId)).body("Sign-Up Success");
     }
 
     @PostMapping("/sign-in")

@@ -3,7 +3,7 @@ package knu.networksecuritylab.appserver.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
-import knu.networksecuritylab.appserver.exception.AuthException;
+import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +59,7 @@ class UserControllerTest {
     @WithMockUser
     void signUpFailStudentId() throws Exception {
         when(userService.join(any()))
-                .thenThrow(new AuthException(ErrorCode.STUDENT_ID_DUPLICATE));
+                .thenThrow(new CustomAuthException(ErrorCode.STUDENT_ID_DUPLICATE));
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
@@ -101,7 +101,7 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new AuthException(ErrorCode.USER_NOT_FOUND));
+                .thenThrow(new CustomAuthException(ErrorCode.USER_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
@@ -119,7 +119,7 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new AuthException(ErrorCode.INVALID_PASSWORD));
+                .thenThrow(new CustomAuthException(ErrorCode.INVALID_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())

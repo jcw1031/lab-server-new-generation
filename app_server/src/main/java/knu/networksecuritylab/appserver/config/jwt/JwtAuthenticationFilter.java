@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.jwt;
+package knu.networksecuritylab.appserver.config.jwt;
 
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserService userService;
     private final SecretKey secretKey;
@@ -46,9 +46,8 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
 
-        // studentId 추출
+        // 토큰 정보 추출
         String studentId = JwtUtil.getStudentId(token, secretKey);
-        log.info("studentId = {}", studentId);
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =

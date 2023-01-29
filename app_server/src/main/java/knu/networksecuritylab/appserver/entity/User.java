@@ -40,10 +40,10 @@ public class User {
     private String phone;
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Position position = Position.GUEST;
+    private Position position = Position.MEMBER;
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Role role = Role.MEMBER;
+    private Role role = Role.GUEST;
 
     @Builder
     public User(Long id, String studentId, String password, String email, String name,

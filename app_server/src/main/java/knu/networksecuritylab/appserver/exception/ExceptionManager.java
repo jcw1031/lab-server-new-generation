@@ -1,17 +1,19 @@
 package knu.networksecuritylab.appserver.exception;
 
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionManager {
 
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ErrorResponseDto> authExceptionHandler(AuthException e) {
+    @ExceptionHandler(CustomAuthException.class)
+    public ResponseEntity<ErrorResponseDto> authExceptionHandler(CustomAuthException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(ErrorResponseDto.builder()
                         .statusCode(e.getErrorCode().getHttpStatus().value())

@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.config;
 
-import knu.networksecuritylab.appserver.jwt.JwtFilter;
+import knu.networksecuritylab.appserver.config.jwt.JwtAuthenticationFilter;
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ public class AuthenticationConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt 이용 시 사용
                 .and()
-                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
