@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.jwt;
+package knu.networksecuritylab.appserver.config.jwt;
 
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
@@ -19,11 +20,14 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserService userService;
     private final SecretKey secretKey;
+
+    private static final String TOKEN_PREFIX = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("authorization = {}", authorization);
 
         // Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
+        if (authorization == null || !authorization.startsWith(TOKEN_PREFIX)) {
             log.error("authorization이 올바르지 않습니다.");
             filterChain.doFilter(request, response);
             return;
@@ -46,9 +50,8 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
 
-        // studentId 추출
+        // 토큰 정보 추출
         String studentId = JwtUtil.getStudentId(token, secretKey);
-        log.info("studentId = {}", studentId);
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =

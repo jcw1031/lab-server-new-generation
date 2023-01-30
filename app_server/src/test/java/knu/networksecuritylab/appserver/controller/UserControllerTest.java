@@ -1,9 +1,9 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.controller.dto.SignInRequestDTO;
-import knu.networksecuritylab.appserver.controller.dto.SignUpRequestDTO;
-import knu.networksecuritylab.appserver.exception.AuthException;
+import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
+import knu.networksecuritylab.appserver.exception.custom.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +43,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                        .content(mapper.writeValueAsBytes(SignUpRequestDto.builder()
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
@@ -59,12 +59,12 @@ class UserControllerTest {
     @WithMockUser
     void signUpFailStudentId() throws Exception {
         when(userService.join(any()))
-                .thenThrow(new AuthException(ErrorCode.STUDENT_ID_DUPLICATE));
+                .thenThrow(new CustomAuthException(ErrorCode.STUDENT_ID_DUPLICATE));
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(SignUpRequestDTO.builder()
+                        .content(mapper.writeValueAsBytes(SignUpRequestDto.builder()
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
@@ -88,7 +88,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(username, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(username, password))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -101,12 +101,12 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new AuthException(ErrorCode.USER_NOT_FOUND));
+                .thenThrow(new CustomAuthException(ErrorCode.USER_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(studentId, password))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -119,12 +119,12 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new AuthException(ErrorCode.INVALID_PASSWORD));
+                .thenThrow(new CustomAuthException(ErrorCode.INVALID_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(new SignInRequestDTO(studentId, password))))
+                        .content(mapper.writeValueAsBytes(new SignInRequestDto(studentId, password))))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }

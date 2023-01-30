@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ErrorResponseDTO {
+public class ErrorResponseDto {
 
     private int statusCode;
     private String errorType;
     private String message;
 
     @Builder
-    public ErrorResponseDTO(int statusCode, String errorType, String message) {
+    public ErrorResponseDto(int statusCode, String errorType, String message) {
         this.statusCode = statusCode;
         this.errorType = errorType;
         this.message = message;
