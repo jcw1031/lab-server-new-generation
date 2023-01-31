@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.controller.dto;
+package knu.networksecuritylab.appserver.controller.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInRequestDTO {
+public class SignInRequestDto {
 
     @Column(unique = true)
     @NotEmpty(message = "학번은 비어있을 수 없습니다.")

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/test")
-public class JwtTestController {
+public class TestController {
 
     @PostMapping
-    public ResponseEntity<String> testResponse() {
-        return ResponseEntity.ok().body("test");
+    public ResponseEntity<String> bookRegister() {
+        return ResponseEntity.ok().body("테스트");
     }
 }
