@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.config.jwt;
 
+import io.jsonwebtoken.UnsupportedJwtException;
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("authorization = {}", authorization);
 
         // Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith(TOKEN_PREFIX)) {
-            log.error("authorization이 올바르지 않습니다.");
+        if (isNotSignUpOrSignIn(request) && invalidAuthorizationHeader(authorization)) {
+            throw new UnsupportedJwtException("Error");
+        }
+
+        if (!isNotSignUpOrSignIn(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -61,5 +65,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isNotSignUpOrSignIn(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+
+        return !requestURI.equals("/api/v1/users/sign-up") && !requestURI.equals("/api/v1/users/sign-in");
+    }
+
+    private boolean invalidAuthorizationHeader(String authorization) {
+        return authorization == null || !authorization.startsWith(TOKEN_PREFIX);
     }
 }
