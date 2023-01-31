@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class JwtProvider {
 
-    private static final Long EXPIRE_TIME_MS = 1_000 * 5L;
+    private static final Long EXPIRE_TIME_MS = 1_000 * 30L;
     private static final String TOKEN_PREFIX = "Bearer ";
 
     public static String createToken(Long id, String studentId, Role role, final SecretKey secretKey) {
