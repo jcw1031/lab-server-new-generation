@@ -31,7 +31,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_PREFIX = "Bearer ";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        if (!isValidateUri(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authorization = {}", authorization);
 
@@ -40,26 +46,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new UnsupportedJwtException("Error");
         }
 
-        if (authorization == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         // Token 추출
         String token = authorization.split(" ")[1];
-
-        // Token Expired 여부 확인
-        if (JwtUtil.isExpired(token, secretKey)) {
-            log.error("Token이 만료되었습니다.");
-            filterChain.doFilter(request, response);
-        }
 
         // 토큰 정보 추출
         String studentId = JwtUtil.getStudentId(token, secretKey);
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(studentId, null, List.of(new SimpleGrantedAuthority("USER"))); // DB에서 회원의 role을 꺼내서 넣을 수 있음
+                new UsernamePasswordAuthenticationToken(studentId, null,
+                        List.of(new SimpleGrantedAuthority("USER"))); // DB에서 회원의 role을 꺼내서 넣을 수 있음
 
         // 디테일 추가
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

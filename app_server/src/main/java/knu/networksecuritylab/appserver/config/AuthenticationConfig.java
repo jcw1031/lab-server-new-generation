@@ -28,6 +28,7 @@ public class AuthenticationConfig {
                 .cors().and() //cross site에서 도메인이 다를 때 허용
                 .authorizeRequests()
                 .antMatchers("/api/v1/users/sign-up", "/api/v1/users/sign-in", "/api/v1/test").permitAll() // 허용
+                .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .and()
                 .sessionManagement()

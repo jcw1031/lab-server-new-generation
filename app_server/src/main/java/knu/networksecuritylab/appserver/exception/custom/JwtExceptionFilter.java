@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.SignatureException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtExceptionFilter extends OncePerRequestFilter {
@@ -28,8 +30,16 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
+            log.error("토큰 만료");
             setErrorResponse(response, ErrorCode.TOKEN_EXPIRED);
-        } catch (SignatureException | MalformedJwtException | UnsupportedJwtException e) {
+        } catch (SignatureException e) {
+            log.error("토큰 유효성 없음");
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN);
+        } catch (MalformedJwtException e) {
+            log.error("훼손된 토큰");
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하지 않는 토큰 형식");
             setErrorResponse(response, ErrorCode.INVALID_TOKEN);
         }
     }

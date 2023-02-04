@@ -15,7 +15,7 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration()
-                .after(new Date());
+                .before(new Date(System.currentTimeMillis()));
     }
 
     public static String getStudentId(String token, SecretKey secretKey) {
