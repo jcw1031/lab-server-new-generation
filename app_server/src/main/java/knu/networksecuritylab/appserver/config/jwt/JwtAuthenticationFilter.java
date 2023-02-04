@@ -36,11 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("authorization = {}", authorization);
 
         // Authorization 헤더 검증
-        if (isNotSignUpOrSignIn(request) && invalidAuthorizationHeader(authorization)) {
+        if (isValidateUri(request) && invalidAuthorizationHeader(authorization)) {
             throw new UnsupportedJwtException("Error");
         }
 
-        if (!isNotSignUpOrSignIn(request)) {
+        if (authorization == null) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -67,10 +67,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isNotSignUpOrSignIn(HttpServletRequest request) {
+    private boolean isValidateUri(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        String method = request.getMethod();
 
-        return !requestURI.equals("/api/v1/users/sign-up") && !requestURI.equals("/api/v1/users/sign-in");
+        return !(requestURI.equals("/api/v1/users/sign-up") || requestURI.equals("/api/v1/users/sign-in")) &&
+                method.equals("POST");
     }
 
     private boolean invalidAuthorizationHeader(String authorization) {
