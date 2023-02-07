@@ -1,11 +1,13 @@
 package knu.networksecuritylab.appserver.entity.user;
 
+import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -98,5 +100,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static User of(SignUpRequestDto signUpRequestDto, PasswordEncoder passwordEncoder) {
+        return User.builder()
+                .studentId(signUpRequestDto.getStudentId())
+                .password(passwordEncoder.encode(
+                        signUpRequestDto.getPassword()))
+                .name(signUpRequestDto.getName())
+                .email(signUpRequestDto.getEmail())
+                .phone(signUpRequestDto.getPhone())
+                .build();
     }
 }

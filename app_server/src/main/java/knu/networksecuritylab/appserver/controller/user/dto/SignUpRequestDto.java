@@ -1,10 +1,8 @@
 package knu.networksecuritylab.appserver.controller.user.dto;
 
-import knu.networksecuritylab.appserver.entity.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -34,15 +32,5 @@ public class SignUpRequestDto {
         this.email = email;
         this.name = name;
         this.phone = phone;
-    }
-
-    public User toEntity(BCryptPasswordEncoder encoder) {
-        return User.builder()
-                .studentId(studentId)
-                .password(encoder.encode(password))
-                .email(email)
-                .name(name)
-                .phone(phone)
-                .build();
     }
 }

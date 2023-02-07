@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${jwt.secretKey}")
+    @Value("${jwt.secret}")
     private String secretKey;
     private final Long tokenExpireTimeMs = 1_000 * 60L;
 

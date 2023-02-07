@@ -38,7 +38,7 @@ class UserControllerTest {
     @WithMockUser
     void signUpSuccess() throws Exception {
         when(userService.join(any()))
-                .thenReturn("sign-up success");
+                .thenReturn(1L);
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
