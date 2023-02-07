@@ -26,13 +26,16 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt 이용 시 사용
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/sign-up", "/api/v1/users/sign-in").permitAll() // 허용
+                // permitAll() -> 모두 허용     authenticated() -> 인증 필요     hasRole() -> 권한 필요
+                .antMatchers("/api/v1/users/sign-up", "/api/v1/users/sign-in").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .anyRequest().hasRole("ADMIN")
                 .and()
+                // 권한을 확인하는 과정에서 통과하지 못하는 예외가 발생할 경우, 예외를 전달 -> CustomAccessDeniedHandler
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
+                // 인증 과정에서 예외가 발생할 경우, 예외를 전달 -> CustomAuthenticationEntryPoint
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
