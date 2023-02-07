@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.entity.category;
+package knu.networksecuritylab.appserver.entity.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

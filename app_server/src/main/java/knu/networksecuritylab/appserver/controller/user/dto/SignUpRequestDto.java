@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.controller.user.dto;
 
-import knu.networksecuritylab.appserver.entity.User;
+import knu.networksecuritylab.appserver.entity.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

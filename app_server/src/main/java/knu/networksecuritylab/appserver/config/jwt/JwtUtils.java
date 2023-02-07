@@ -8,14 +8,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
 public class JwtUtils {
 
-    private final SecretKey secretKey;
+    private String secretKey;
     private final UserDetailsService userDetailsService;
+
+    @PostConstruct
+    void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsername(token));

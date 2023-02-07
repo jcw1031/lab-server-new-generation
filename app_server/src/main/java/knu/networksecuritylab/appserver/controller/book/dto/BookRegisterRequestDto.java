@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.controller.book.dto;
 
-import knu.networksecuritylab.appserver.entity.category.Category;
+import knu.networksecuritylab.appserver.entity.book.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,7 @@ package knu.networksecuritylab.appserver.service;
 
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
-import knu.networksecuritylab.appserver.entity.User;
+import knu.networksecuritylab.appserver.entity.user.User;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.config.jwt.JwtProvider;
@@ -19,7 +19,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
-    private final SecretKey secretKey;
 
     public Long join(final SignUpRequestDto signUpRequestDTO) {
         userRepository.findByStudentId(signUpRequestDTO.getStudentId())

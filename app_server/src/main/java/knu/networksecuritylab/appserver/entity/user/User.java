@@ -1,6 +1,5 @@
-package knu.networksecuritylab.appserver.entity;
+package knu.networksecuritylab.appserver.entity.user;
 
-import knu.networksecuritylab.appserver.entity.authority.Position;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
