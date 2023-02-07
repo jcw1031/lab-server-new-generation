@@ -2,6 +2,8 @@ package knu.networksecuritylab.appserver.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,9 +18,17 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final JwtUtils jwtUtils;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String token = jwtUtils.resolveToken(request);
+        if (token != null && jwtUtils.isNotExpired(token)) {
+            Authentication authentication = jwtUtils.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
+        filterChain.doFilter(request, response);
     }
 }
