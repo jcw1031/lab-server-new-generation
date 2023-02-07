@@ -22,6 +22,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,11 @@ public class User implements UserDetails {
     @NotBlank(message = "비밀번호는 비어있을 수 없습니다.")
     private String password;
 
+    @NotBlank(message = "이메일은 비어있을 수 없습니다.")
     @Email(message = "이메일 형식이 맞지 않습니다.")
     private String email;
+
+    @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
     @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "전화번호 형식이 맞지 않습니다.")
@@ -110,6 +114,7 @@ public class User implements UserDetails {
                 .name(signUpRequestDto.getName())
                 .email(signUpRequestDto.getEmail())
                 .phone(signUpRequestDto.getPhone())
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }
 }
