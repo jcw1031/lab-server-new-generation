@@ -3,7 +3,7 @@ package knu.networksecuritylab.appserver.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
-import knu.networksecuritylab.appserver.exception.custom.CustomAuthException;
+import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ class UserControllerTest {
     @WithMockUser
     void signUpSuccess() throws Exception {
         when(userService.join(any()))
-                .thenReturn("sign-up success");
+                .thenReturn(1L);
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
@@ -47,7 +47,6 @@ class UserControllerTest {
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
-                                .phone("010-9517-1530")
                                 .name("지찬우")
                                 .build())))
                 .andDo(print())
@@ -68,7 +67,6 @@ class UserControllerTest {
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
-                                .phone("010-9517-1530")
                                 .name("지찬우")
                                 .build())))
                 .andDo(print())
@@ -119,7 +117,7 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new CustomAuthException(ErrorCode.INVALID_PASSWORD));
+                .thenThrow(new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())

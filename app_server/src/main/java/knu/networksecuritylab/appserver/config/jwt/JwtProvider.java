@@ -2,27 +2,41 @@ package knu.networksecuritylab.appserver.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import knu.networksecuritylab.appserver.entity.authority.Role;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
-    private static final Long EXPIRE_TIME_MS = 1_000 * 30L;
-    private static final String TOKEN_PREFIX = "Bearer ";
+    @Value("${jwt.secret}")
+    private String secretKey;
+    private final Long tokenExpireTimeMs = 1_000 * 60L;
 
-    public static String createToken(Long id, String studentId, Role role, final SecretKey secretKey) {
-        Claims claims = Jwts.claims();
+    @PostConstruct
+    void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String createToken(Long id, String studentId, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(studentId);
         claims.put("id", id);
-        claims.put("studentId", studentId);
-        claims.put("role", role);
+        claims.put("roles", roles);
 
-        return TOKEN_PREFIX + Jwts.builder()
+        Date now = new Date();
+        return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TIME_MS))
-                .signWith(secretKey)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenExpireTimeMs))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 }
