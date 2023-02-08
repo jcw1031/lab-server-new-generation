@@ -1,8 +1,10 @@
 package knu.networksecuritylab.appserver.service;
 
 import knu.networksecuritylab.appserver.config.jwt.JwtProvider;
+import knu.networksecuritylab.appserver.config.jwt.JwtUtils;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
+import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import knu.networksecuritylab.appserver.entity.user.User;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -18,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final JwtUtils jwtUtils;
 
     private final String TOKEN_PREFIX = "Bearer ";
 
@@ -53,5 +58,15 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public UserInfoResponseDto getUserInfo(HttpServletRequest request) {
+        String token = jwtUtils.resolveToken(request);
+        String studentId = jwtUtils.getStudentId(token);
+
+        User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
+                new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+
+        return user.toDto();
     }
 }

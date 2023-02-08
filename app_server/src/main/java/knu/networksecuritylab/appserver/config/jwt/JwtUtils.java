@@ -32,12 +32,12 @@ public class JwtUtils {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsername(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getStudentId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
     }
 
-    private String getUsername(String token) {
+    public String getStudentId(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)

@@ -2,14 +2,17 @@ package knu.networksecuritylab.appserver.controller.user;
 
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
+import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import knu.networksecuritylab.appserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -27,8 +30,14 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody final SignInRequestDto signInRequestDto) {
+    public ResponseEntity<String> signIn(@RequestBody @Valid final SignInRequestDto signInRequestDto) {
         String token = userService.signIn(signInRequestDto);
         return ResponseEntity.ok().body(token);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<UserInfoResponseDto> userInfo(HttpServletRequest request) {
+        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(request);
+        return ResponseEntity.ok().body(userInfoResponseDto);
     }
 }

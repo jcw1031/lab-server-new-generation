@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.entity.user;
 
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
+import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -115,6 +116,16 @@ public class User implements UserDetails {
                 .email(signUpRequestDto.getEmail())
                 .phone(signUpRequestDto.getPhone())
                 .roles(Collections.singletonList("ROLE_USER"))
+                .build();
+    }
+
+    public UserInfoResponseDto toDto() {
+        return UserInfoResponseDto.builder()
+                .studentId(this.studentId)
+                .name(this.name)
+                .email(this.email)
+                .phone(this.phone)
+                .position(this.position)
                 .build();
     }
 }
