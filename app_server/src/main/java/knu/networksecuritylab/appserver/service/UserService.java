@@ -51,10 +51,10 @@ public class UserService {
 
     private User usernameAndPasswordValidate(final SignInRequestDto signInRequestDto) {
         User user = userRepository.findByStudentId(signInRequestDto.getStudentId())
-                .orElseThrow(() -> new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD));
 
         if (!passwordEncoder.matches(signInRequestDto.getPassword(), user.getPassword())) {
-            throw new CustomAuthException(ErrorCode.INVALID_PASSWORD);
+            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD);
         }
 
         return user;

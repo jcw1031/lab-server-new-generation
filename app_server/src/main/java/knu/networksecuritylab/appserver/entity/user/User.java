@@ -53,9 +53,6 @@ public class User implements UserDetails {
     @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
-    @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "전화번호 형식이 맞지 않습니다.")
-    private String phone;
-
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Position position = Position.MEMBER;
@@ -65,13 +62,12 @@ public class User implements UserDetails {
 
     @Builder
     public User(Long id, String studentId, String password, String email, String name,
-                String phone, Position position, List<String> roles) {
+                Position position, List<String> roles) {
         this.id = id;
         this.studentId = studentId;
         this.password = password;
         this.email = email;
         this.name = name;
-        this.phone = phone;
         this.position = position;
         this.roles = roles;
     }
@@ -114,7 +110,6 @@ public class User implements UserDetails {
                         signUpRequestDto.getPassword()))
                 .name(signUpRequestDto.getName())
                 .email(signUpRequestDto.getEmail())
-                .phone(signUpRequestDto.getPhone())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }
@@ -124,7 +119,6 @@ public class User implements UserDetails {
                 .studentId(this.studentId)
                 .name(this.name)
                 .email(this.email)
-                .phone(this.phone)
                 .position(this.position)
                 .build();
     }

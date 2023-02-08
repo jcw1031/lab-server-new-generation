@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<UserInfoResponseDto> userInfo(HttpServletRequest request) {
+    public ResponseEntity<UserInfoResponseDto> userInfo(final HttpServletRequest request) {
         UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(request);
         return ResponseEntity.ok().body(userInfoResponseDto);
     }

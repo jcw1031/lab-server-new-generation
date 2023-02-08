@@ -29,15 +29,11 @@ public class SignUpRequestDto {
     @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
-    @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "전화번호 형식이 맞지 않습니다.")
-    private String phone;
-
     @Builder
-    public SignUpRequestDto(String studentId, String password, String email, String name, String phone) {
+    public SignUpRequestDto(String studentId, String password, String email, String name) {
         this.studentId = studentId;
         this.password = password;
         this.email = email;
         this.name = name;
-        this.phone = phone;
     }
 }

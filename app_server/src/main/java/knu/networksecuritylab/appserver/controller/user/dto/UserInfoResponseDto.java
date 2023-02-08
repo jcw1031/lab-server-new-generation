@@ -13,15 +13,13 @@ public class UserInfoResponseDto {
     private String studentId;
     private String name;
     private String email;
-    private String phone;
     private Position position;
 
     @Builder
-    public UserInfoResponseDto(String studentId, String name, String email, String phone, Position position) {
+    public UserInfoResponseDto(String studentId, String name, String email, Position position) {
         this.studentId = studentId;
         this.name = name;
         this.email = email;
-        this.phone = phone;
         this.position = position;
     }
 }
