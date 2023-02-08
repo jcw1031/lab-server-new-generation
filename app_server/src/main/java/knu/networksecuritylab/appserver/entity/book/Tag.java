@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
 
@@ -28,6 +30,7 @@ public class Tag {
     private String tagName;
 
     @OneToMany(mappedBy = "tag")
+    @ToString.Exclude
     private final List<BookTag> bookTags = new ArrayList<>();
 
     @Builder
