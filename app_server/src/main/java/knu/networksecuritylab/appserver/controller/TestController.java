@@ -16,7 +16,7 @@ public class TestController {
 
     @PostMapping
     public ResponseEntity<String> testPost(@AuthenticationPrincipal User user) {
-        log.info("Principal = {}", user.getStudentId());
+        log.info("Principal = {}", user.getName());
         return ResponseEntity.ok().body("POST 테스트");
     }
 

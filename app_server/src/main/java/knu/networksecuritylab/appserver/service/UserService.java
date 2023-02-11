@@ -5,6 +5,7 @@ import knu.networksecuritylab.appserver.config.jwt.JwtUtils;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.user.dto.WithdrawalRequestDto;
 import knu.networksecuritylab.appserver.entity.user.User;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
@@ -65,7 +66,7 @@ public class UserService {
         return user;
     }*/
 
-    public String signIn(SignInRequestDto signInRequestDto) {
+    public String signIn(final SignInRequestDto signInRequestDto) {
         String studentId = signInRequestDto.getStudentId();
         String password = signInRequestDto.getPassword();
 
@@ -87,7 +88,7 @@ public class UserService {
             String authenticatedStudentId = user.getUsername();
             List<String> roles = user.getRoles();
 
-            return "Bearer " + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles);
+            return TOKEN_PREFIX + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles);
         }
 
         throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
@@ -95,11 +96,25 @@ public class UserService {
 
     public UserInfoResponseDto getUserInfo(final String authorization) {
         String token = jwtUtils.resolveToken(authorization);
-        String studentId = jwtUtils.getStudentId(token);
+        String studentId = jwtUtils.getStudentIdInToken(token);
 
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
                 new CustomAuthException(ErrorCode.USER_NOT_FOUND));
 
         return user.toDto();
+    }
+
+    public String deleteUser(final String authorization, final WithdrawalRequestDto withdrawalRequestDto) {
+        String token = jwtUtils.resolveToken(authorization);
+        String studentId = jwtUtils.getStudentIdInToken(token);
+
+        User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
+                new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+
+        if (!withdrawalRequestDto.getPassword().equals(user.getPassword())) {
+            throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
+        }
+        userRepository.delete(user);
+        return "계정이 삭제되었습니다.";
     }
 }
