@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -36,8 +36,9 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<UserInfoResponseDto> userInfo(final HttpServletRequest request) {
-        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(request);
+    public ResponseEntity<UserInfoResponseDto> userInfo(
+            final @RequestHeader("Authorization") String authorization) {
+        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(authorization);
         return ResponseEntity.ok().body(userInfoResponseDto);
     }
 }

@@ -10,10 +10,14 @@ import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
 import knu.networksecuritylab.appserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final JwtUtils jwtUtils;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final String TOKEN_PREFIX = "Bearer ";
 
@@ -42,7 +47,7 @@ public class UserService {
         return User.of(signUpRequestDto, passwordEncoder);
     }
 
-    public String signIn(final SignInRequestDto signInRequestDTO) {
+    /*public String signIn(final SignInRequestDto signInRequestDTO) {
         User user = usernameAndPasswordValidate(signInRequestDTO);
 
         String token = jwtProvider.createToken(user.getId(), user.getStudentId(), user.getRoles());
@@ -51,17 +56,45 @@ public class UserService {
 
     private User usernameAndPasswordValidate(final SignInRequestDto signInRequestDto) {
         User user = userRepository.findByStudentId(signInRequestDto.getStudentId())
-                .orElseThrow(() -> new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD));
+                .orElseThrow(() -> new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD));
 
         if (!passwordEncoder.matches(signInRequestDto.getPassword(), user.getPassword())) {
-            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD);
+            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
 
         return user;
+    }*/
+
+    public String signIn(SignInRequestDto signInRequestDto) {
+        String studentId = signInRequestDto.getStudentId();
+        String password = signInRequestDto.getPassword();
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(studentId, password);
+
+        Authentication authentication;
+        try {
+            authentication = authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+        } catch (AuthenticationException e) {
+            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
+        }
+
+        if (authentication.isAuthenticated()) {
+            User user = (User) authentication.getPrincipal();
+
+            Long authenticatedId = user.getId();
+            String authenticatedStudentId = user.getUsername();
+            List<String> roles = user.getRoles();
+
+            return "Bearer " + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles);
+        }
+
+        throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
     }
 
-    public UserInfoResponseDto getUserInfo(HttpServletRequest request) {
-        String token = jwtUtils.resolveToken(request);
+    public UserInfoResponseDto getUserInfo(final String authorization) {
+        String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentId(token);
 
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
