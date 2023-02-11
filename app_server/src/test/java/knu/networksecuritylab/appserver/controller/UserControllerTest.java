@@ -117,7 +117,7 @@ class UserControllerTest {
         String password = "woopaca";
 
         when(userService.signIn(any()))
-                .thenThrow(new CustomAuthException(ErrorCode.INVALID_USERNAME_AND_PASSWORD));
+                .thenThrow(new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
