@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.service;
+package knu.networksecuritylab.appserver.service.user;
 
 import knu.networksecuritylab.appserver.config.jwt.JwtProvider;
 import knu.networksecuritylab.appserver.config.jwt.JwtUtils;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class BasicUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,6 +32,7 @@ public class UserService {
 
     private final String TOKEN_PREFIX = "Bearer ";
 
+    @Override
     public Long join(final SignUpRequestDto signUpRequestDTO) {
         User user = checkUsernameDuplicate(signUpRequestDTO);
         User savedUser = userRepository.save(user);
@@ -66,6 +67,7 @@ public class UserService {
         return user;
     }*/
 
+    @Override
     public String signIn(final SignInRequestDto signInRequestDto) {
         String studentId = signInRequestDto.getStudentId();
         String password = signInRequestDto.getPassword();
@@ -94,6 +96,7 @@ public class UserService {
         throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
     }
 
+    @Override
     public UserInfoResponseDto getUserInfo(final String authorization) {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);
@@ -104,6 +107,7 @@ public class UserService {
         return user.toDto();
     }
 
+    @Override
     public String deleteUser(final String authorization, final WithdrawalRequestDto withdrawalRequestDto) {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);

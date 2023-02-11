@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.ErrorCode;
-import knu.networksecuritylab.appserver.service.UserService;
+import knu.networksecuritylab.appserver.service.user.BasicUserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +31,13 @@ class UserControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    UserService userService;
+    BasicUserService basicUserService;
 
     @Test
     @DisplayName("회원가입 성공")
     @WithMockUser
     void signUpSuccess() throws Exception {
-        when(userService.join(any()))
+        when(basicUserService.join(any()))
                 .thenReturn(1L);
 
         mockMvc.perform(post("/api/v1/users/sign-up")
@@ -57,7 +57,7 @@ class UserControllerTest {
     @DisplayName("회원가입 실패 - studentId 중복")
     @WithMockUser
     void signUpFailStudentId() throws Exception {
-        when(userService.join(any()))
+        when(basicUserService.join(any()))
                 .thenThrow(new CustomAuthException(ErrorCode.STUDENT_ID_DUPLICATE));
 
         mockMvc.perform(post("/api/v1/users/sign-up")
@@ -80,7 +80,7 @@ class UserControllerTest {
         String username = "woopaca";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
+        when(basicUserService.signIn(any()))
                 .thenReturn("token");
 
         mockMvc.perform(post("/api/v1/users/sign-in")
@@ -98,7 +98,7 @@ class UserControllerTest {
         String studentId = "201901689";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
+        when(basicUserService.signIn(any()))
                 .thenThrow(new CustomAuthException(ErrorCode.USER_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
@@ -116,7 +116,7 @@ class UserControllerTest {
         String studentId = "201901689";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
+        when(basicUserService.signIn(any()))
                 .thenThrow(new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
