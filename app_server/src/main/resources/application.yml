@@ -17,7 +17,7 @@ logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.type: trace
-    org.apache.coyote.http11: debug
+#    org.apache.coyote.http11: debug
     knu.networksecuritylab.appserver: info
 
 jwt:
