@@ -115,7 +115,7 @@ public class BasicUserService implements UserService {
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
                 new CustomAuthException(UserErrorCode.USER_NOT_FOUND));
 
-        if (!withdrawalRequestDto.getPassword().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(withdrawalRequestDto.getPassword(), user.getPassword())) {
             throw new CustomAuthException(UserErrorCode.INVALID_AUTHORIZATION);
         }
         userRepository.delete(user);

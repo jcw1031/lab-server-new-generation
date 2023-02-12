@@ -18,6 +18,7 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
     org.apache.coyote.http11: debug
+    knu.networksecuritylab.appserver: info
 
 jwt:
   secret: KNU_NETWORK_SECURITY_LAB
