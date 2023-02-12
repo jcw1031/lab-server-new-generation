@@ -5,6 +5,8 @@ import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestD
 import knu.networksecuritylab.appserver.service.book.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +31,9 @@ public class BookController {
     public ResponseEntity<String> registerBook(@RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto) {
         log.info("bookRegisterRequestDto = {}", bookRegisterRequestDto);
         Long bookId = bookService.registerBook(bookRegisterRequestDto);
-        return ResponseEntity.created(URI.create("/api/v1/books" + bookId)).body("도서 등록 완료");
+        return ResponseEntity.created(URI.create("/api/v1/books/" + bookId))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE + ";" + StandardCharsets.UTF_8)
+                .body("도서 등록 완료");
     }
 
     @GetMapping("")
