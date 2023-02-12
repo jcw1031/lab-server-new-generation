@@ -2,6 +2,7 @@ package knu.networksecuritylab.appserver.entity.user;
 
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
     @Id
