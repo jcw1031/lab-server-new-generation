@@ -1,5 +1,7 @@
 package knu.networksecuritylab.appserver.entity.book;
 
+import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
 
     @Id
@@ -35,11 +37,19 @@ public class Book {
     private final List<BookTag> bookTags = new ArrayList<>();
 
     @Builder
-    public Book(Long id, String bookName, String bookAuthor, String bookPublisher, int bookStock) {
-        this.id = id;
+    public Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
         this.bookStock = bookStock;
+    }
+
+    public static Book of(BookRegisterRequestDto bookRegisterRequestDto) {
+        return Book.builder()
+                .bookName(bookRegisterRequestDto.getBookName())
+                .bookAuthor(bookRegisterRequestDto.getBookAuthor())
+                .bookPublisher(bookRegisterRequestDto.getBookPublisher())
+                .bookStock(bookRegisterRequestDto.getBookStock())
+                .build();
     }
 }

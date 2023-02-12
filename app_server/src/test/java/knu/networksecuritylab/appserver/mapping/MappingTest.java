@@ -2,7 +2,7 @@ package knu.networksecuritylab.appserver.mapping;
 
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
-import knu.networksecuritylab.appserver.repository.BookRepository;
+import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

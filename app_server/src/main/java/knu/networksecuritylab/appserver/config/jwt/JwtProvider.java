@@ -19,14 +19,14 @@ public class JwtProvider {
 
     @Value("${jwt.secret}")
     private String secretKey;
-    private final Long tokenExpireTimeMs = 1_000 * 60L;
+    private final Long HOUR_TIME = 1_000 * 60 * 60L;
 
     @PostConstruct
     void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long id, String studentId, List<String> roles) {
+    public String createToken(Long id, String studentId, List<String> roles, int tokenExpireHour) {
         Claims claims = Jwts.claims().setSubject(studentId);
         claims.put("id", id);
         claims.put("roles", roles);
@@ -35,7 +35,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenExpireTimeMs))
+                .setExpiration(new Date(now.getTime() + HOUR_TIME * tokenExpireHour))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

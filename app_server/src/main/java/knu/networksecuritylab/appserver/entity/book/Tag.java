@@ -34,8 +34,7 @@ public class Tag {
     private final List<BookTag> bookTags = new ArrayList<>();
 
     @Builder
-    public Tag(Long id, String tagName) {
-        this.id = id;
+    public Tag(String tagName) {
         this.tagName = tagName;
     }
 }

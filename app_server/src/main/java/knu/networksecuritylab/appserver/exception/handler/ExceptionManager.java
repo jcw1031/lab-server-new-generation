@@ -1,11 +1,13 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
+import knu.networksecuritylab.appserver.exception.BookDuplicateException;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,9 +25,9 @@ public class ExceptionManager {
             CustomAuthException e, HttpServletRequest request
     ) {
         List<String> messages = new ArrayList<>();
-        messages.add(e.getErrorCode().getMessage());
+        messages.add(e.getUserErrorCode().getMessage());
 
-        return createResponseEntity(e.getErrorCode().getHttpStatus(), messages, request);
+        return createResponseEntity(e.getUserErrorCode().getHttpStatus(), messages, request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -48,6 +50,27 @@ public class ExceptionManager {
         log.error("Messages = {}", messages);
 
         return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ResponseEntity<ErrorResponseDto> methodNotAllowedExceptionHandler(HttpServletRequest request) {
+        String message = "지원하지 않는 Method입니다.";
+
+        List<String> messages = new ArrayList<>();
+        messages.add(message);
+        log.error("Messages = {}", messages);
+
+        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+    }
+
+    @ExceptionHandler(BookDuplicateException.class)
+    protected ResponseEntity<ErrorResponseDto> bookDuplicateExceptionHandler(
+            BookDuplicateException e, HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add(e.getBookErrorCode().getMessage());
+
+        return createResponseEntity(e.getBookErrorCode().getHttpStatus(), messages, request);
     }
 
     private ResponseEntity<ErrorResponseDto> createResponseEntity(
