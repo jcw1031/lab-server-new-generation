@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.repository;
+package knu.networksecuritylab.appserver.repository.book;
 
 import knu.networksecuritylab.appserver.entity.book.Book;
 import org.springframework.data.jpa.repository.JpaRepository;

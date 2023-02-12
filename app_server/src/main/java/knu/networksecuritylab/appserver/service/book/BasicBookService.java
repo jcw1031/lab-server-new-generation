@@ -1,7 +1,7 @@
 package knu.networksecuritylab.appserver.service.book;
 
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
-import knu.networksecuritylab.appserver.repository.BookRepository;
+import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ public class BasicBookService implements BookService {
 
     @Override
     public Long registerBook(BookRegisterRequestDto bookRegisterRequestDto) {
+
         return null;
     }
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,6 +46,17 @@ public class ExceptionManager {
         List<String> messages = new ArrayList<>();
         messages.add(message);
 
+        log.error("Messages = {}", messages);
+
+        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ResponseEntity<ErrorResponseDto> methodNotAllowedExceptionHandler(HttpServletRequest request) {
+        String message = "지원하지 않는 Method입니다.";
+
+        List<String> messages = new ArrayList<>();
+        messages.add(message);
         log.error("Messages = {}", messages);
 
         return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
