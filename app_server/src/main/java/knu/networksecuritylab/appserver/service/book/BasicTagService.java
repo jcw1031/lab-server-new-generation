@@ -24,4 +24,17 @@ public class BasicTagService implements TagService {
 
         return tagList;
     }
+
+    @Override
+    public List<Tag> tagArrangement(List<String> tags) {
+        List<Tag> tagList = new ArrayList<>();
+        tags.forEach(tagName -> {
+            Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
+                    tagRepository.save(new Tag(tagName)));
+
+            tagList.add(tag);
+        });
+        System.out.println("tagList = " + tagList);
+        return tagList;
+    }
 }

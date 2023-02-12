@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CustomAuthException extends RuntimeException {
+public class BookDuplicateException extends RuntimeException {
 
-    private final UserErrorCode userErrorCode;
+    private final BookErrorCode bookErrorCode;
 }

@@ -21,3 +21,6 @@ logging:
 
 jwt:
   secret: KNU_NETWORK_SECURITY_LAB
+
+server:
+  port: 9150

@@ -8,7 +8,7 @@ import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.user.dto.WithdrawalRequestDto;
 import knu.networksecuritylab.appserver.entity.user.User;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
-import knu.networksecuritylab.appserver.exception.ErrorCode;
+import knu.networksecuritylab.appserver.exception.UserErrorCode;
 import knu.networksecuritylab.appserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +43,7 @@ public class BasicUserService implements UserService {
         String studentId = signUpRequestDto.getStudentId();
         userRepository.findByStudentId(studentId)
                 .ifPresent(user -> {
-                    throw new CustomAuthException(ErrorCode.STUDENT_ID_DUPLICATE);
+                    throw new CustomAuthException(UserErrorCode.STUDENT_ID_DUPLICATE);
                 });
 
         return User.of(signUpRequestDto, passwordEncoder);
@@ -80,7 +80,7 @@ public class BasicUserService implements UserService {
             authentication = authenticationManagerBuilder.getObject()
                     .authenticate(authenticationToken);
         } catch (AuthenticationException e) {
-            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
+            throw new CustomAuthException(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
 
         if (authentication.isAuthenticated()) {
@@ -90,10 +90,10 @@ public class BasicUserService implements UserService {
             String authenticatedStudentId = user.getUsername();
             List<String> roles = user.getRoles();
 
-            return TOKEN_PREFIX + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles);
+            return TOKEN_PREFIX + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles, 2);
         }
 
-        throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
+        throw new CustomAuthException(UserErrorCode.INVALID_AUTHORIZATION);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class BasicUserService implements UserService {
         String studentId = jwtUtils.getStudentIdInToken(token);
 
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
-                new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+                new CustomAuthException(UserErrorCode.USER_NOT_FOUND));
 
         return user.toDto();
     }
@@ -113,10 +113,10 @@ public class BasicUserService implements UserService {
         String studentId = jwtUtils.getStudentIdInToken(token);
 
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
-                new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+                new CustomAuthException(UserErrorCode.USER_NOT_FOUND));
 
         if (!withdrawalRequestDto.getPassword().equals(user.getPassword())) {
-            throw new CustomAuthException(ErrorCode.INVALID_AUTHORIZATION);
+            throw new CustomAuthException(UserErrorCode.INVALID_AUTHORIZATION);
         }
         userRepository.delete(user);
         return "계정이 삭제되었습니다.";

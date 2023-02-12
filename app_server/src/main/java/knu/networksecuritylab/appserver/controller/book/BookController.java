@@ -23,8 +23,8 @@ public class BookController {
 
     @PostMapping()
     public ResponseEntity<String> registerBook(@RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto) {
+        log.info("bookRegisterRequestDto = {}", bookRegisterRequestDto);
         Long bookId = bookService.registerBook(bookRegisterRequestDto);
         return ResponseEntity.created(URI.create("/api/v1/books" + bookId)).body("도서 등록 완료");
     }
-
 }

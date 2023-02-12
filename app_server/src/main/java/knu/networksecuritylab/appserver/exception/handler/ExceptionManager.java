@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
+import knu.networksecuritylab.appserver.exception.BookDuplicateException;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,9 @@ public class ExceptionManager {
             CustomAuthException e, HttpServletRequest request
     ) {
         List<String> messages = new ArrayList<>();
-        messages.add(e.getErrorCode().getMessage());
+        messages.add(e.getUserErrorCode().getMessage());
 
-        return createResponseEntity(e.getErrorCode().getHttpStatus(), messages, request);
+        return createResponseEntity(e.getUserErrorCode().getHttpStatus(), messages, request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -60,6 +61,16 @@ public class ExceptionManager {
         log.error("Messages = {}", messages);
 
         return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+    }
+
+    @ExceptionHandler(BookDuplicateException.class)
+    protected ResponseEntity<ErrorResponseDto> bookDuplicateExceptionHandler(
+            BookDuplicateException e, HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add(e.getBookErrorCode().getMessage());
+
+        return createResponseEntity(e.getBookErrorCode().getHttpStatus(), messages, request);
     }
 
     private ResponseEntity<ErrorResponseDto> createResponseEntity(
