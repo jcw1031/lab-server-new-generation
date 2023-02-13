@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.repository;
 
-import knu.networksecuritylab.appserver.entity.User;
+import knu.networksecuritylab.appserver.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

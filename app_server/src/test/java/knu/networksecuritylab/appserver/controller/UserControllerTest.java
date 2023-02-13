@@ -1,11 +1,12 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import knu.networksecuritylab.appserver.config.jwt.JwtAuthenticationFilter;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
-import knu.networksecuritylab.appserver.exception.custom.CustomAuthException;
-import knu.networksecuritylab.appserver.exception.ErrorCode;
-import knu.networksecuritylab.appserver.service.UserService;
+import knu.networksecuritylab.appserver.exception.CustomAuthException;
+import knu.networksecuritylab.appserver.exception.UserErrorCode;
+import knu.networksecuritylab.appserver.service.user.BasicUserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,16 @@ class UserControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    UserService userService;
+    BasicUserService basicUserService;
+    @MockBean
+    JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @DisplayName("회원가입 성공")
     @WithMockUser
     void signUpSuccess() throws Exception {
-        when(userService.join(any()))
-                .thenReturn("sign-up success");
+        when(basicUserService.join(any()))
+                .thenReturn(1L);
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
@@ -47,7 +50,6 @@ class UserControllerTest {
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
-                                .phone("010-9517-1530")
                                 .name("지찬우")
                                 .build())))
                 .andDo(print())
@@ -58,8 +60,8 @@ class UserControllerTest {
     @DisplayName("회원가입 실패 - studentId 중복")
     @WithMockUser
     void signUpFailStudentId() throws Exception {
-        when(userService.join(any()))
-                .thenThrow(new CustomAuthException(ErrorCode.STUDENT_ID_DUPLICATE));
+        when(basicUserService.join(any()))
+                .thenThrow(new CustomAuthException(UserErrorCode.STUDENT_ID_DUPLICATE));
 
         mockMvc.perform(post("/api/v1/users/sign-up")
                         .with(csrf())
@@ -68,7 +70,6 @@ class UserControllerTest {
                                 .studentId("201901689")
                                 .password("woopaca")
                                 .email("jcw001031@gmail.com")
-                                .phone("010-9517-1530")
                                 .name("지찬우")
                                 .build())))
                 .andDo(print())
@@ -82,7 +83,7 @@ class UserControllerTest {
         String username = "woopaca";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
+        when(basicUserService.signIn(any()))
                 .thenReturn("token");
 
         mockMvc.perform(post("/api/v1/users/sign-in")
@@ -100,8 +101,8 @@ class UserControllerTest {
         String studentId = "201901689";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
-                .thenThrow(new CustomAuthException(ErrorCode.USER_NOT_FOUND));
+        when(basicUserService.signIn(any()))
+                .thenThrow(new CustomAuthException(UserErrorCode.USER_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
@@ -118,8 +119,8 @@ class UserControllerTest {
         String studentId = "201901689";
         String password = "woopaca";
 
-        when(userService.signIn(any()))
-                .thenThrow(new CustomAuthException(ErrorCode.INVALID_PASSWORD));
+        when(basicUserService.signIn(any()))
+                .thenThrow(new CustomAuthException(UserErrorCode.INVALID_USERNAME_OR_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/sign-in")
                         .with(csrf())
