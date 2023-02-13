@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.controller.book;
 
-import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.service.book.BookService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +37,8 @@ public class BookController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<BookInfoResponseDto>> allBookList() {
-        List<BookInfoResponseDto> bookList = bookService.bookList();
+    public ResponseEntity<List<BookListResponseDto>> randomBookListTen() {
+        List<BookListResponseDto> bookList = bookService.bookList();
         return ResponseEntity.ok().body(bookList);
     }
 }

@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.service.book;
 
-import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
@@ -51,8 +51,8 @@ public class BasicBookService implements BookService {
 
     @Override
     @Transactional
-    public List<BookInfoResponseDto> bookList() {
-        List<BookInfoResponseDto> bookList = new ArrayList<>();
+    public List<BookListResponseDto> bookList() {
+        List<BookListResponseDto> bookList = new ArrayList<>();
         bookRepository.findAll().forEach(book -> bookList.add(book.toDto()));
         return bookList;
     }

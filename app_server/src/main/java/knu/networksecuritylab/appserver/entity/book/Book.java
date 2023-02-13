@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.entity.book;
 
-import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -54,14 +54,10 @@ public class Book {
                 .build();
     }
 
-    public BookInfoResponseDto toDto() {
-        BookInfoResponseDto bookInfoResponseDto = BookInfoResponseDto.builder()
+    public BookListResponseDto toDto() {
+        return BookListResponseDto.builder()
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
-                .bookPublisher(this.bookPublisher)
-                .bookStock(this.bookStock)
                 .build();
-        bookInfoResponseDto.updateTags(this.bookTags);
-        return bookInfoResponseDto;
     }
 }
