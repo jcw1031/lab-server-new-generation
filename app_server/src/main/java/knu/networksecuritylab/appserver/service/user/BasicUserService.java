@@ -72,7 +72,8 @@ public class BasicUserService implements UserService {
             String authenticatedStudentId = user.getUsername();
             List<String> roles = user.getRoles();
 
-            return TOKEN_PREFIX + jwtProvider.createToken(authenticatedId, authenticatedStudentId, roles, 2);
+            return TOKEN_PREFIX + jwtProvider
+                    .createToken(authenticatedId, authenticatedStudentId, roles, 2);
         }
 
         throw new CustomAuthException(UserErrorCode.INVALID_AUTHORIZATION);

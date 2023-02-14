@@ -26,7 +26,7 @@ public class BasicTagService implements TagService {
     }
 
     @Override
-    public List<Tag> tagArrangement(List<String> tags) {
+    public List<Tag> tagArrangement(final List<String> tags) {
         List<Tag> tagList = new ArrayList<>();
         tags.forEach(tagName -> {
             Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->

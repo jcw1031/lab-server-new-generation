@@ -27,7 +27,7 @@ public class BasicBookService implements BookService {
     @Override
     @Transactional
     public Long registerBook(final BookRegisterRequestDto bookRegisterRequestDto) {
-        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getTags());
+        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
 
         Book book = checkDuplicateBook(bookRegisterRequestDto);
         bookRepository.save(book);
@@ -36,11 +36,12 @@ public class BasicBookService implements BookService {
     }
 
     private Book checkDuplicateBook(final BookRegisterRequestDto bookRegisterRequestDto) {
-        bookRepository.findByBookName(bookRegisterRequestDto.getBookName()).ifPresent(book -> {
-            if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
-                throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
-            }
-        });
+        bookRepository.findByBookName(bookRegisterRequestDto.getBookName())
+                .ifPresent(book -> {
+                    if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
+                        throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
+                    }
+                });
 
         return Book.of(bookRegisterRequestDto);
     }
@@ -53,7 +54,8 @@ public class BasicBookService implements BookService {
     @Transactional
     public List<BookListResponseDto> bookList() {
         List<BookListResponseDto> bookList = new ArrayList<>();
-        bookRepository.findAll().forEach(book -> bookList.add(book.toDto()));
+        bookRepository.findBookRandomList()
+                .forEach(book -> bookList.add(book.toBookListDto()));
         return bookList;
     }
 }

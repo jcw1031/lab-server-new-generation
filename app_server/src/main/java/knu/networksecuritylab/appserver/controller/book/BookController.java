@@ -28,11 +28,14 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("")
-    public ResponseEntity<String> registerBook(@RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto) {
+    public ResponseEntity<String> registerBook(
+            @RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto
+    ) {
         log.info("bookRegisterRequestDto = {}", bookRegisterRequestDto);
         Long bookId = bookService.registerBook(bookRegisterRequestDto);
         return ResponseEntity.created(URI.create("/api/v1/books/" + bookId))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
+                .header(HttpHeaders.CONTENT_TYPE,
+                        MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
                 .body("도서 등록 완료");
     }
 

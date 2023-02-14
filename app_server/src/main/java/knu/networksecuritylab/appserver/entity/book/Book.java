@@ -54,8 +54,9 @@ public class Book {
                 .build();
     }
 
-    public BookListResponseDto toDto() {
+    public BookListResponseDto toBookListDto() {
         return BookListResponseDto.builder()
+                .id(this.id)
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
                 .build();
