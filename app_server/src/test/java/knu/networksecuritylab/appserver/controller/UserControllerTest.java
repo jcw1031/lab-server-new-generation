@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import knu.networksecuritylab.appserver.config.jwt.JwtAuthenticationFilter;
 import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
@@ -32,6 +33,8 @@ class UserControllerTest {
 
     @MockBean
     BasicUserService basicUserService;
+    @MockBean
+    JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @DisplayName("회원가입 성공")

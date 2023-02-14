@@ -49,24 +49,6 @@ public class BasicUserService implements UserService {
         return User.of(signUpRequestDto, passwordEncoder);
     }
 
-    /*public String signIn(final SignInRequestDto signInRequestDTO) {
-        User user = usernameAndPasswordValidate(signInRequestDTO);
-
-        String token = jwtProvider.createToken(user.getId(), user.getStudentId(), user.getRoles());
-        return TOKEN_PREFIX + token;
-    }
-
-    private User usernameAndPasswordValidate(final SignInRequestDto signInRequestDto) {
-        User user = userRepository.findByStudentId(signInRequestDto.getStudentId())
-                .orElseThrow(() -> new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD));
-
-        if (!passwordEncoder.matches(signInRequestDto.getPassword(), user.getPassword())) {
-            throw new CustomAuthException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
-        }
-
-        return user;
-    }*/
-
     @Override
     public String signIn(final SignInRequestDto signInRequestDto) {
         String studentId = signInRequestDto.getStudentId();
@@ -115,7 +97,7 @@ public class BasicUserService implements UserService {
         User user = userRepository.findByStudentId(studentId).orElseThrow(() ->
                 new CustomAuthException(UserErrorCode.USER_NOT_FOUND));
 
-        if (!withdrawalRequestDto.getPassword().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(withdrawalRequestDto.getPassword(), user.getPassword())) {
             throw new CustomAuthException(UserErrorCode.INVALID_AUTHORIZATION);
         }
         userRepository.delete(user);

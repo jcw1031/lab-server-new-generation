@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.service.book;
 
+import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,5 +47,13 @@ public class BasicBookService implements BookService {
 
     private void bookTagging(final List<Tag> tagList, final Book book) {
         tagList.forEach(tag -> bookTagRepository.save(new BookTag(book, tag)));
+    }
+
+    @Override
+    @Transactional
+    public List<BookInfoResponseDto> bookList() {
+        List<BookInfoResponseDto> bookList = new ArrayList<>();
+        bookRepository.findAll().forEach(book -> bookList.add(book.toDto()));
+        return bookList;
     }
 }

@@ -12,15 +12,20 @@ spring:
         format_sql: true
         use_sql_comments: true
         highlight_sql: true
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 30MB
 
 logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.type: trace
-    org.apache.coyote.http11: debug
+#    org.apache.coyote.http11: debug
+    knu.networksecuritylab.appserver: info
 
 jwt:
   secret: KNU_NETWORK_SECURITY_LAB
 
 server:
-  port: 9150
+  port: 8888
