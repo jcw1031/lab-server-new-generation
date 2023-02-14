@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.exception;
+package knu.networksecuritylab.appserver.exception.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

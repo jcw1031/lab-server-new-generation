@@ -1,8 +1,5 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
-import knu.networksecuritylab.appserver.exception.BookDuplicateException;
-import knu.networksecuritylab.appserver.exception.BookNotFoundException;
-import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,17 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionManager {
-
-    @ExceptionHandler(CustomAuthException.class)
-    public ResponseEntity<ErrorResponseDto> authExceptionHandler(
-            CustomAuthException e, HttpServletRequest request
-    ) {
-        List<String> messages = new ArrayList<>();
-        messages.add(e.getUserErrorCode().getMessage());
-
-        return createResponseEntity(e.getUserErrorCode().getHttpStatus(), messages, request);
-    }
+public class CommonExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> validExceptionHandler(
@@ -39,40 +26,31 @@ public class ExceptionManager {
         List<String> messages = new ArrayList<>();
         e.getFieldErrors().forEach(fieldError -> messages.add(fieldError.getDefaultMessage()));
 
-        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponseDto> jsonParseExceptionHandler(HttpServletRequest request) {
-        String message = "HTTP 바디 메시지를 읽을 수 없습니다.";
-
         List<String> messages = new ArrayList<>();
-        messages.add(message);
-
+        messages.add("HTTP 바디 메시지를 읽을 수 없습니다.");
         log.error("Messages = {}", messages);
 
-        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ErrorResponseDto> methodNotAllowedExceptionHandler(HttpServletRequest request) {
-        String message = "지원하지 않는 Method입니다.";
-
         List<String> messages = new ArrayList<>();
-        messages.add(message);
+        messages.add("지원하지 않는 Method입니다.");
         log.error("Messages = {}", messages);
 
-        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
-    }
-
-    @ExceptionHandler(BookDuplicateException.class)
-    protected ResponseEntity<ErrorResponseDto> bookDuplicateExceptionHandler(
-            BookDuplicateException e, HttpServletRequest request
-    ) {
-        List<String> messages = new ArrayList<>();
-        messages.add(e.getBookErrorCode().getMessage());
-
-        return createResponseEntity(e.getBookErrorCode().getHttpStatus(), messages, request);
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -81,21 +59,14 @@ public class ExceptionManager {
     ) {
         List<String> messages = new ArrayList<>();
         messages.add("경로 변수 타입이 올바르지 않습니다.");
+        log.error("Messages = {}", messages);
 
-        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
     }
 
-    @ExceptionHandler(BookNotFoundException.class)
-    protected ResponseEntity<ErrorResponseDto> bookNotFoundException(
-            BookNotFoundException e, HttpServletRequest request
-    ) {
-        List<String> messages = new ArrayList<>();
-        messages.add(e.getBookErrorCode().getMessage());
-
-        return createResponseEntity(e.getBookErrorCode().getHttpStatus(), messages, request);
-    }
-
-    private ResponseEntity<ErrorResponseDto> createResponseEntity(
+    private ErrorResponseDto createErrorResponseDto(
             HttpStatus status, List<String> messages, HttpServletRequest request
     ) {
         String requestURI = request.getRequestURI();
@@ -106,7 +77,6 @@ public class ExceptionManager {
                 .path(requestURI)
                 .build();
         messages.forEach(errorResponseDto::addMessage);
-
-        return ResponseEntity.status(status).body(errorResponseDto);
+        return errorResponseDto;
     }
 }

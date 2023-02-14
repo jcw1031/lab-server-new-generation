@@ -6,9 +6,9 @@ import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestD
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Tag;
-import knu.networksecuritylab.appserver.exception.BookDuplicateException;
-import knu.networksecuritylab.appserver.exception.BookErrorCode;
-import knu.networksecuritylab.appserver.exception.BookNotFoundException;
+import knu.networksecuritylab.appserver.exception.book.BookDuplicateException;
+import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
+import knu.networksecuritylab.appserver.exception.book.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
 import lombok.RequiredArgsConstructor;

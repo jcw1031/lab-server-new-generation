@@ -1,11 +1,11 @@
-package knu.networksecuritylab.appserver.exception;
+package knu.networksecuritylab.appserver.exception.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BookNotFoundException extends RuntimeException {
+public abstract class BookException extends RuntimeException {
 
     private final BookErrorCode bookErrorCode;
 }
