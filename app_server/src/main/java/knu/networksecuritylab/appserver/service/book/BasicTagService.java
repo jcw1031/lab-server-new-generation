@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.service.book;
 
+import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.repository.book.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,20 @@ public class BasicTagService implements TagService {
         List<Tag> tagList = new ArrayList<>();
         tags.forEach(tagName -> {
             Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
-                    tagRepository.save(new Tag(tagName)));
-
+                    tagRepository.save(new Tag(tagName))
+            );
             tagList.add(tag);
         });
-        System.out.println("tagList = " + tagList);
         return tagList;
+    }
+
+    @Override
+    public List<String> listConvertBookTagToString(List<BookTag> bookTags) {
+        List<String> tags = new ArrayList<>();
+        bookTags.forEach(bookTag -> {
+            String tagName = bookTag.getTag().getTagName();
+            tags.add(tagName);
+        });
+        return tags;
     }
 }

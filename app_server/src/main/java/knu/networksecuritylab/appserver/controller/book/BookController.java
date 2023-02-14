@@ -1,5 +1,6 @@
 package knu.networksecuritylab.appserver.controller.book;
 
+import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.service.book.BookService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +45,11 @@ public class BookController {
     public ResponseEntity<List<BookListResponseDto>> randomBookListTen() {
         List<BookListResponseDto> bookList = bookService.bookList();
         return ResponseEntity.ok().body(bookList);
+    }
+
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookInfoResponseDto> bookDetailsInfo(@PathVariable final Long bookId) {
+        BookInfoResponseDto bookInfoResponseDto = bookService.bookInfo(bookId);
+        return ResponseEntity.ok().body(bookInfoResponseDto);
     }
 }

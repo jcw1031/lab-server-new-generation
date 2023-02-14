@@ -12,6 +12,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByBookName(String bookName);
 
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag WHERE b.id = :bookId")
+    Optional<Book> findByIdFetchJoin(@Param("bookId") Long id);
+
     @Query(nativeQuery = true, value = "SELECT * FROM Book ORDER BY RAND() LIMIT 10")
     List<Book> findBookRandomList();
 

@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
 import knu.networksecuritylab.appserver.exception.BookDuplicateException;
+import knu.networksecuritylab.appserver.exception.BookNotFoundException;
 import knu.networksecuritylab.appserver.exception.CustomAuthException;
 import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -66,6 +68,26 @@ public class ExceptionManager {
     @ExceptionHandler(BookDuplicateException.class)
     protected ResponseEntity<ErrorResponseDto> bookDuplicateExceptionHandler(
             BookDuplicateException e, HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add(e.getBookErrorCode().getMessage());
+
+        return createResponseEntity(e.getBookErrorCode().getHttpStatus(), messages, request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<ErrorResponseDto> argumentMismatchExceptionHandler(
+            HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add("경로 변수 타입이 올바르지 않습니다.");
+
+        return createResponseEntity(HttpStatus.BAD_REQUEST, messages, request);
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    protected ResponseEntity<ErrorResponseDto> bookNotFoundException(
+            BookNotFoundException e, HttpServletRequest request
     ) {
         List<String> messages = new ArrayList<>();
         messages.add(e.getBookErrorCode().getMessage());
