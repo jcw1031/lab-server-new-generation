@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -73,6 +74,19 @@ public class CommonExceptionHandler {
     ) {
         List<String> messages = new ArrayList<>();
         messages.add(e.getLocalizedMessage());
+        log.error("Messages = {}", messages);
+
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorResponseDto> missingRequestParameterExceptionHandler(
+        HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add("파라미터가 누락되었습니다.");
         log.error("Messages = {}", messages);
 
         ErrorResponseDto errorResponseDto = createErrorResponseDto(
