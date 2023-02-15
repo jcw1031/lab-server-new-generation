@@ -13,4 +13,6 @@ public interface BookService {
     List<BookListResponseDto> bookList();
 
     BookInfoResponseDto bookInfo(final Long bookId);
+
+    List<BookListResponseDto> bookSearch(String keyword);
 }

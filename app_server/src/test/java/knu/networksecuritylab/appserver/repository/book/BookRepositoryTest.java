@@ -28,7 +28,7 @@ class BookRepositoryTest {
         Book savedBook = bookRepository.save(book);
 
         //when
-        List<Book> bookList = bookRepository.searchBookName("자바");
+        List<Book> bookList = bookRepository.searchBookByName("자바");
 
         //then
         Assertions.assertThat(bookList).contains(savedBook);

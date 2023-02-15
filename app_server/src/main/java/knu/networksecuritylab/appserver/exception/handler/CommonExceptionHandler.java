@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,19 @@ public class CommonExceptionHandler {
     ) {
         List<String> messages = new ArrayList<>();
         messages.add("경로 변수 타입이 올바르지 않습니다.");
+        log.error("Messages = {}", messages);
+
+        ErrorResponseDto errorResponseDto = createErrorResponseDto(
+                HttpStatus.BAD_REQUEST, messages, request);
+        return ResponseEntity.status(errorResponseDto.getStatusCode()).body(errorResponseDto);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorResponseDto> constraintViolationExceptionHandler(
+            ConstraintViolationException e, HttpServletRequest request
+    ) {
+        List<String> messages = new ArrayList<>();
+        messages.add(e.getLocalizedMessage());
         log.error("Messages = {}", messages);
 
         ErrorResponseDto errorResponseDto = createErrorResponseDto(

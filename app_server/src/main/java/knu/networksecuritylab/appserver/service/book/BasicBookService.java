@@ -71,4 +71,12 @@ public class BasicBookService implements BookService {
         List<String> tags = tagService.listConvertBookTagToString(book.getBookTags());
         return book.toBookInfoDto(tags);
     }
+
+    @Override
+    public List<BookListResponseDto> bookSearch(String keyword) {
+        List<BookListResponseDto> bookList = new ArrayList<>();
+        bookRepository.searchBookByName(keyword)
+                .forEach(book -> bookList.add(book.toBookListDto()));
+        return bookList;
+    }
 }
