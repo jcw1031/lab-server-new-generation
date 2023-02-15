@@ -1,6 +1,5 @@
 package knu.networksecuritylab.appserver.controller.book.dto;
 
-import knu.networksecuritylab.appserver.entity.book.BookTag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,19 +16,15 @@ public class BookInfoResponseDto {
     private String bookAuthor;
     private String bookPublisher;
     private int bookStock;
-    private final List<String> tags = new ArrayList<>();
+    private List<String> bookTags = new ArrayList<>();
 
     @Builder
-    public BookInfoResponseDto(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
+    public BookInfoResponseDto(String bookName, String bookAuthor, String bookPublisher,
+                               int bookStock, List<String> bookTags) {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
         this.bookStock = bookStock;
-    }
-
-    public void updateTags(List<BookTag> bookTagList) {
-        bookTagList.forEach(bookTag -> this.tags.add(
-                bookTag.getTag().getTagName())
-        );
+        this.bookTags = bookTags;
     }
 }

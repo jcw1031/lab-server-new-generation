@@ -1,21 +1,25 @@
 package knu.networksecuritylab.appserver.service.book;
 
 import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Tag;
-import knu.networksecuritylab.appserver.exception.BookDuplicateException;
-import knu.networksecuritylab.appserver.exception.BookErrorCode;
+import knu.networksecuritylab.appserver.exception.book.BookDuplicateException;
+import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
+import knu.networksecuritylab.appserver.exception.book.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BasicBookService implements BookService {
@@ -27,7 +31,7 @@ public class BasicBookService implements BookService {
     @Override
     @Transactional
     public Long registerBook(final BookRegisterRequestDto bookRegisterRequestDto) {
-        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getTags());
+        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
 
         Book book = checkDuplicateBook(bookRegisterRequestDto);
         bookRepository.save(book);
@@ -36,11 +40,12 @@ public class BasicBookService implements BookService {
     }
 
     private Book checkDuplicateBook(final BookRegisterRequestDto bookRegisterRequestDto) {
-        bookRepository.findByBookName(bookRegisterRequestDto.getBookName()).ifPresent(book -> {
-            if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
-                throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
-            }
-        });
+        bookRepository.findByBookName(bookRegisterRequestDto.getBookName())
+                .ifPresent(book -> {
+                    if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
+                        throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
+                    }
+                });
 
         return Book.of(bookRegisterRequestDto);
     }
@@ -51,9 +56,27 @@ public class BasicBookService implements BookService {
 
     @Override
     @Transactional
-    public List<BookInfoResponseDto> bookList() {
-        List<BookInfoResponseDto> bookList = new ArrayList<>();
-        bookRepository.findAll().forEach(book -> bookList.add(book.toDto()));
+    public List<BookListResponseDto> bookList() {
+        List<BookListResponseDto> bookList = new ArrayList<>();
+        bookRepository.findBookRandomList()
+                .forEach(book -> bookList.add(book.toBookListDto()));
+        return bookList;
+    }
+
+    @Override
+    public BookInfoResponseDto bookInfo(Long bookId) {
+        Book book = bookRepository.findByIdFetchJoin(bookId)
+                .orElseThrow(() -> new BookNotFoundException(BookErrorCode.BOOK_NOT_FOUND));
+
+        List<String> tags = tagService.listConvertBookTagToString(book.getBookTags());
+        return book.toBookInfoDto(tags);
+    }
+
+    @Override
+    public List<BookListResponseDto> bookSearch(String keyword) {
+        List<BookListResponseDto> bookList = new ArrayList<>();
+        bookRepository.searchBookByName(keyword)
+                .forEach(book -> bookList.add(book.toBookListDto()));
         return bookList;
     }
 }
