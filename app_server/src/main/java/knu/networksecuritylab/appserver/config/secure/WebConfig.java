@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.config;
+package knu.networksecuritylab.appserver.config.secure;
 
 import knu.networksecuritylab.appserver.common.JsonToBookRegisterRequestDtoObject;
 import lombok.RequiredArgsConstructor;

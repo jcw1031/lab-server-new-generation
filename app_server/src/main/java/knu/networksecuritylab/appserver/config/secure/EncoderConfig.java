@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.config;
+package knu.networksecuritylab.appserver.config.secure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

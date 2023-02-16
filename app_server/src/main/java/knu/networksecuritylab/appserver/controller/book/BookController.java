@@ -13,13 +13,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -35,6 +36,21 @@ public class BookController {
 
     @PostMapping("")
     public ResponseEntity<String> registerBook(
+            @RequestPart(value = "bookImages", required = false) final List<MultipartFile> bookImages,
+            @RequestParam("book") final BookRegisterRequestDto bookRegisterRequestDto
+    ) throws IOException {
+        log.info("bookRegisterRequestDto = {}, bookImages size = {}",
+                bookRegisterRequestDto, bookImages.size());
+
+        Long bookId = bookService.registerBook(bookImages, bookRegisterRequestDto);
+        return ResponseEntity.created(URI.create("/api/v1/books/" + bookId))
+                .header(HttpHeaders.CONTENT_TYPE,
+                        MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
+                .body("도서 등록 완료");
+    }
+
+    /*@PostMapping("")
+    public ResponseEntity<String> registerBook(
             @RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto
     ) {
         log.info("bookRegisterRequestDto = {}", bookRegisterRequestDto);
@@ -43,7 +59,7 @@ public class BookController {
                 .header(HttpHeaders.CONTENT_TYPE,
                         MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
                 .body("도서 등록 완료");
-    }
+    }*/
 
     @GetMapping("")
     public ResponseEntity<List<BookListResponseDto>> randomBookListTen() {
