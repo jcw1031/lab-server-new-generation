@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,10 @@ public class Book {
     private int bookStock;
 
     @OneToMany(mappedBy = "book")
-    private final List<BookTag> bookTags = new ArrayList<>();
+    private List<BookTag> bookTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
 
     @Builder
     public Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {

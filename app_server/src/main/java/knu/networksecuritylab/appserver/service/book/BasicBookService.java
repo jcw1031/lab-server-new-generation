@@ -11,11 +11,14 @@ import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
 import knu.networksecuritylab.appserver.exception.book.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
+import knu.networksecuritylab.appserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +30,26 @@ public class BasicBookService implements BookService {
 
     private final BookRepository bookRepository;
     private final TagService tagService;
+    private final FileService fileService;
+//    private final ImageRepository imageRepository;
     private final BookTagRepository bookTagRepository;
 
     @Override
+    @Transactional
+    public Long registerBook(
+            final List<MultipartFile> files,
+            final BookRegisterRequestDto bookRegisterRequestDto) throws IOException {
+        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
+
+        Book book = checkDuplicateBook(bookRegisterRequestDto);
+        fileService.parseFiles(files).forEach(image -> image.setBook(book));
+
+        bookRepository.save(book); // cascade 설정으로 image도 모두 저장
+        bookTagging(tagList, book);
+        return book.getId();
+    }
+
+    /*@Override
     @Transactional
     public Long registerBook(final BookRegisterRequestDto bookRegisterRequestDto) {
         List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
@@ -38,7 +58,7 @@ public class BasicBookService implements BookService {
         bookRepository.save(book);
         bookTagging(tagList, book);
         return book.getId();
-    }
+    }*/
 
     private Book checkDuplicateBook(final BookRegisterRequestDto bookRegisterRequestDto) {
         bookRepository.findByBookName(bookRegisterRequestDto.getBookName())

@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.config;
+package knu.networksecuritylab.appserver.config.secure;
 
 import knu.networksecuritylab.appserver.config.jwt.JwtAuthenticationFilter;
 import knu.networksecuritylab.appserver.exception.handler.auth.CustomAccessDeniedHandler;
