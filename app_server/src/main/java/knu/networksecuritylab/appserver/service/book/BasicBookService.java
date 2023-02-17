@@ -40,7 +40,7 @@ public class BasicBookService implements BookService {
     public Long registerBook(
             final List<MultipartFile> files,
             final BookRegisterRequestDto bookRegisterRequestDto) throws IOException {
-        List<Tag> tags = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
+        List<Tag> tags = tagService.tagArrangement(bookRegisterRequestDto.getBookTagList());
 
         Book book = checkDuplicateBook(bookRegisterRequestDto);
         fileService.multipartFilesStoreAndConvertToImages(files).forEach(image -> image.setBook(book));
