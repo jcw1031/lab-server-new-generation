@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
-import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
+import knu.networksecuritylab.appserver.exception.handler.dto.ErrorResponseDto;
 import knu.networksecuritylab.appserver.exception.user.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package knu.networksecuritylab.appserver.exception.handler.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
+import knu.networksecuritylab.appserver.exception.handler.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
