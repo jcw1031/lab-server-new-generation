@@ -1,10 +1,10 @@
 package knu.networksecuritylab.appserver.service.file;
 
 import knu.networksecuritylab.appserver.entity.book.Image;
-import knu.networksecuritylab.appserver.exception.book.InvalidFileExtensionException;
+import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
 import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
-import knu.networksecuritylab.appserver.exception.file.FileStorageException;
-import knu.networksecuritylab.appserver.exception.file.ImageNotReadable;
+import knu.networksecuritylab.appserver.exception.file.impl.FileStorageException;
+import knu.networksecuritylab.appserver.exception.file.impl.ImageNotReadable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

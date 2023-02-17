@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.service.book;
+package knu.networksecuritylab.appserver.service.book.impl;
 
 import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
@@ -7,11 +7,13 @@ import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Image;
 import knu.networksecuritylab.appserver.entity.book.Tag;
-import knu.networksecuritylab.appserver.exception.book.BookDuplicateException;
+import knu.networksecuritylab.appserver.exception.book.impl.BookDuplicateException;
 import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
-import knu.networksecuritylab.appserver.exception.book.BookNotFoundException;
+import knu.networksecuritylab.appserver.exception.book.impl.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
+import knu.networksecuritylab.appserver.service.book.BookService;
+import knu.networksecuritylab.appserver.service.book.TagService;
 import knu.networksecuritylab.appserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

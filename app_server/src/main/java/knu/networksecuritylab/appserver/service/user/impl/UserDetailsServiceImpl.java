@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.service.user;
+package knu.networksecuritylab.appserver.service.user.impl;
 
 import knu.networksecuritylab.appserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

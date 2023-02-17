@@ -1,9 +1,10 @@
-package knu.networksecuritylab.appserver.service.book;
+package knu.networksecuritylab.appserver.service.book.impl;
 
 import knu.networksecuritylab.appserver.entity.book.Image;
 import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
-import knu.networksecuritylab.appserver.exception.file.ImageNotFoundException;
+import knu.networksecuritylab.appserver.exception.file.impl.ImageNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.ImageRepository;
+import knu.networksecuritylab.appserver.service.book.ImageService;
 import knu.networksecuritylab.appserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,9 @@
-package knu.networksecuritylab.appserver.service.book;
+package knu.networksecuritylab.appserver.service.book.impl;
 
 import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.repository.book.TagRepository;
+import knu.networksecuritylab.appserver.service.book.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

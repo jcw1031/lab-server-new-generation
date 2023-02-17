@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.service.user;
+package knu.networksecuritylab.appserver.service.user.impl;
 
 import knu.networksecuritylab.appserver.config.jwt.JwtProvider;
 import knu.networksecuritylab.appserver.config.jwt.JwtUtils;
@@ -7,12 +7,13 @@ import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.user.dto.WithdrawalRequestDto;
 import knu.networksecuritylab.appserver.entity.user.User;
-import knu.networksecuritylab.appserver.exception.user.InvalidAuthenticationException;
-import knu.networksecuritylab.appserver.exception.user.InvalidUsernameOrPassword;
-import knu.networksecuritylab.appserver.exception.user.UserNotFoundException;
-import knu.networksecuritylab.appserver.exception.user.UsernameDuplicateException;
+import knu.networksecuritylab.appserver.exception.user.impl.InvalidAuthenticationException;
+import knu.networksecuritylab.appserver.exception.user.impl.InvalidUsernameOrPassword;
+import knu.networksecuritylab.appserver.exception.user.impl.UserNotFoundException;
+import knu.networksecuritylab.appserver.exception.user.impl.UsernameDuplicateException;
 import knu.networksecuritylab.appserver.exception.user.UserErrorCode;
 import knu.networksecuritylab.appserver.repository.UserRepository;
+import knu.networksecuritylab.appserver.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

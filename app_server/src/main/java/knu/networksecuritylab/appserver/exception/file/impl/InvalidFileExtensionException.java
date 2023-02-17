@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.exception.book;
+package knu.networksecuritylab.appserver.exception.file.impl;
 
 import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
 import knu.networksecuritylab.appserver.exception.file.FileException;
