@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.config.secure;
+package knu.networksecuritylab.appserver.config;
 
 import knu.networksecuritylab.appserver.common.JsonToBookRegisterRequestDtoObject;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig extends WebMvcConfigurationSupport {
+public class ConverterConfig extends WebMvcConfigurationSupport {
 
     private final JsonToBookRegisterRequestDtoObject jsonToBookRegisterRequestDtoObject;
 
