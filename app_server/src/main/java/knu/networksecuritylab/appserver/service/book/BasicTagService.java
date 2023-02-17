@@ -27,24 +27,24 @@ public class BasicTagService implements TagService {
     }
 
     @Override
-    public List<Tag> tagArrangement(final List<String> tags) {
-        List<Tag> tagList = new ArrayList<>();
-        tags.forEach(tagName -> {
+    public List<Tag> tagArrangement(final List<String> tagList) {
+        List<Tag> tags = new ArrayList<>();
+        tagList.forEach(tagName -> {
             Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
                     tagRepository.save(new Tag(tagName))
             );
-            tagList.add(tag);
+            tags.add(tag);
         });
-        return tagList;
+        return tags;
     }
 
     @Override
-    public List<String> listConvertBookTagToString(List<BookTag> bookTags) {
-        List<String> tags = new ArrayList<>();
+    public List<String> bookTagsToTagNameList(List<BookTag> bookTags) {
+        List<String> tagList = new ArrayList<>();
         bookTags.forEach(bookTag -> {
             String tagName = bookTag.getTag().getTagName();
-            tags.add(tagName);
+            tagList.add(tagName);
         });
-        return tags;
+        return tagList;
     }
 }

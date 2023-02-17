@@ -14,8 +14,6 @@ public interface BookService {
                       final BookRegisterRequestDto bookRegisterRequestDto)
             throws IOException;
 
-//    Long registerBook(final BookRegisterRequestDto bookRegisterRequestDto);
-
     List<BookListResponseDto> bookList();
 
     BookInfoResponseDto bookInfo(final Long bookId);

@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface FileService {
 
-    List<Image> parseFiles(List<MultipartFile> images) throws IOException;
+    List<Image> multipartFilesStoreAndConvertToImages(List<MultipartFile> multipartFiles)
+            throws IOException;
+
+    byte[] imageConvertToBytes(Image image);
 }

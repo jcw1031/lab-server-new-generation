@@ -5,6 +5,7 @@ import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.entity.book.Book;
 import knu.networksecuritylab.appserver.entity.book.BookTag;
+import knu.networksecuritylab.appserver.entity.book.Image;
 import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.exception.book.BookDuplicateException;
 import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
@@ -32,7 +33,6 @@ public class BasicBookService implements BookService {
     private final BookRepository bookRepository;
     private final TagService tagService;
     private final FileService fileService;
-    //    private final ImageRepository imageRepository;
     private final BookTagRepository bookTagRepository;
 
     @Override
@@ -40,26 +40,15 @@ public class BasicBookService implements BookService {
     public Long registerBook(
             final List<MultipartFile> files,
             final BookRegisterRequestDto bookRegisterRequestDto) throws IOException {
-        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
+        List<Tag> tags = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
 
         Book book = checkDuplicateBook(bookRegisterRequestDto);
-        fileService.parseFiles(files).forEach(image -> image.setBook(book));
+        fileService.multipartFilesStoreAndConvertToImages(files).forEach(image -> image.setBook(book));
 
         bookRepository.save(book); // cascade 설정으로 image도 모두 저장
-        bookTagging(tagList, book);
+        bookTagging(tags, book);
         return book.getId();
     }
-
-    /*@Override
-    @Transactional
-    public Long registerBook(final BookRegisterRequestDto bookRegisterRequestDto) {
-        List<Tag> tagList = tagService.tagArrangement(bookRegisterRequestDto.getBookTags());
-
-        Book book = checkDuplicateBook(bookRegisterRequestDto);
-        bookRepository.save(book);
-        bookTagging(tagList, book);
-        return book.getId();
-    }*/
 
     private Book checkDuplicateBook(final BookRegisterRequestDto bookRegisterRequestDto) {
         bookRepository.findByBookName(bookRegisterRequestDto.getBookName())
@@ -72,8 +61,8 @@ public class BasicBookService implements BookService {
         return Book.of(bookRegisterRequestDto);
     }
 
-    private void bookTagging(final List<Tag> tagList, final Book book) {
-        tagList.forEach(tag -> {
+    private void bookTagging(final List<Tag> tags, final Book book) {
+        tags.forEach(tag -> {
             Optional<BookTag> findBookTag = bookTagRepository.findByBookAndTag(book, tag);
             if (findBookTag.isEmpty()) {
                 bookTagRepository.save(new BookTag(book, tag));
@@ -91,11 +80,25 @@ public class BasicBookService implements BookService {
 
     @Override
     public BookInfoResponseDto bookInfo(Long bookId) {
-        Book book = bookRepository.findByIdFetchJoin(bookId)
-                .orElseThrow(() -> new BookNotFoundException(BookErrorCode.BOOK_NOT_FOUND));
+        List<Long> imageList = new ArrayList<>();
+        Book book = bookRepository.findByIdIfImagesExists(bookId).orElse(null);
+        if (book != null) {
+            imageList = bookImagesToImageIdList(book.getImages());
+        }
 
-        List<String> tags = tagService.listConvertBookTagToString(book.getBookTags());
-        return book.toBookInfoDto(tags);
+        book = bookRepository.findByIdWithBookTags(bookId)
+                .orElseThrow(() -> new BookNotFoundException(BookErrorCode.BOOK_NOT_FOUND));
+        List<String> tagList = tagService.bookTagsToTagNameList(book.getBookTags());
+
+        return book.toBookInfoDto(tagList, imageList);
+    }
+
+    private List<Long> bookImagesToImageIdList(List<Image> images) {
+        List<Long> imageList = new ArrayList<>();
+        for (Image image : images) {
+            imageList.add(image.getId());
+        }
+        return imageList;
     }
 
     @Override

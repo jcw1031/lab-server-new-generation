@@ -20,11 +20,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicUserService implements UserService {
 
     private final UserRepository userRepository;
@@ -36,6 +38,7 @@ public class BasicUserService implements UserService {
     private final String TOKEN_PREFIX = "Bearer ";
 
     @Override
+    @Transactional
     public Long join(final SignUpRequestDto signUpRequestDTO) {
         User user = checkUsernameDuplicate(signUpRequestDTO);
         User savedUser = userRepository.save(user);
@@ -53,6 +56,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public String signIn(final SignInRequestDto signInRequestDto) {
         String studentId = signInRequestDto.getStudentId();
         String password = signInRequestDto.getPassword();
@@ -94,6 +98,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public String deleteUser(final String authorization, final WithdrawalRequestDto withdrawalRequestDto) {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);
