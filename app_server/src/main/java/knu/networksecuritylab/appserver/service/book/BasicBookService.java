@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,7 +32,7 @@ public class BasicBookService implements BookService {
     private final BookRepository bookRepository;
     private final TagService tagService;
     private final FileService fileService;
-//    private final ImageRepository imageRepository;
+    //    private final ImageRepository imageRepository;
     private final BookTagRepository bookTagRepository;
 
     @Override
@@ -72,7 +73,12 @@ public class BasicBookService implements BookService {
     }
 
     private void bookTagging(final List<Tag> tagList, final Book book) {
-        tagList.forEach(tag -> bookTagRepository.save(new BookTag(book, tag)));
+        tagList.forEach(tag -> {
+            Optional<BookTag> findBookTag = bookTagRepository.findByBookAndTag(book, tag);
+            if (findBookTag.isEmpty()) {
+                bookTagRepository.save(new BookTag(book, tag));
+            }
+        });
     }
 
     @Override
