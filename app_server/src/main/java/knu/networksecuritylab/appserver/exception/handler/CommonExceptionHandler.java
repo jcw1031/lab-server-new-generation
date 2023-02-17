@@ -60,7 +60,7 @@ public class CommonExceptionHandler {
             HttpServletRequest request
     ) {
         List<String> messages = new ArrayList<>();
-        messages.add("경로 변수 타입이 올바르지 않습니다.");
+        messages.add("타입이 올바르지 않습니다.");
         log.error("Messages = {}", messages);
 
         ErrorResponseDto errorResponseDto = createErrorResponseDto(
