@@ -19,4 +19,6 @@ public interface BookService {
     BookInfoResponseDto bookInfo(final Long bookId);
 
     List<BookListResponseDto> bookSearch(String keyword);
+
+    void removeBook(Long bookId);
 }

@@ -102,4 +102,13 @@ public class ImageFileService implements FileService {
             throw new ImageNotReadable();
         }
     }
+
+    @Override
+    public void removeImages(List<String> imageNameList) {
+        for (String imageName : imageNameList) {
+            try {
+                Files.delete(Paths.get(STORAGE_PATH + File.separator + imageName));
+            } catch (IOException ignored) {}
+        }
+    }
 }

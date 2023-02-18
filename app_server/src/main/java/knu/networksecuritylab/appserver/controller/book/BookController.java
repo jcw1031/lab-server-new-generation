@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,5 +74,13 @@ public class BookController {
             @RequestParam("keyword") @NotBlank String keyword) {
         List<BookListResponseDto> bookList = bookService.bookSearch(keyword);
         return ResponseEntity.ok().body(bookList);
+    }
+
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<String> bookDelete(@PathVariable("bookId") Long bookId) {
+        bookService.removeBook(bookId);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE,
+                        MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
+                .body("도서 삭제 완료");
     }
 }

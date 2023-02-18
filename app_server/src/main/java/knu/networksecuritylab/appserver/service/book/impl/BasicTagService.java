@@ -34,7 +34,9 @@ public class BasicTagService implements TagService {
             Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
                     tagRepository.save(new Tag(tagName))
             );
-            tags.add(tag);
+            if(!tags.contains(tag)) {
+                tags.add(tag);
+            }
         });
         return tags;
     }
