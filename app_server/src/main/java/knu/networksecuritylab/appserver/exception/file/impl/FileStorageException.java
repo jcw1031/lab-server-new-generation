@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.file.FileException;
 
 public class FileStorageException extends FileException {
 
-    public FileStorageException(FileErrorCode fileErrorCode) {
-        super(fileErrorCode);
+    public FileStorageException() {
+        super(FileErrorCode.CAN_NOT_CREATE_DIRECTORY);
     }
 }

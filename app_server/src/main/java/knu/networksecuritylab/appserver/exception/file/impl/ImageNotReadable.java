@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.file.FileException;
 
 public class ImageNotReadable extends FileException {
 
-    public ImageNotReadable(FileErrorCode fileErrorCode) {
-        super(fileErrorCode);
+    public ImageNotReadable() {
+        super(FileErrorCode.IMAGE_NOT_READABLE);
     }
 }

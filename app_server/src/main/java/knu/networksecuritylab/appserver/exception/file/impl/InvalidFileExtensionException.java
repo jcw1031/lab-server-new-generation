@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.file.FileException;
 
 public class InvalidFileExtensionException extends FileException {
 
-    public InvalidFileExtensionException(FileErrorCode fileErrorCode) {
-        super(fileErrorCode);
+    public InvalidFileExtensionException() {
+        super(FileErrorCode.INVALID_FILE_EXTENSION);
     }
 }

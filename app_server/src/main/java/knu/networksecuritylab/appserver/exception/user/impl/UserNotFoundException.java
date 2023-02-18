@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.user.UserException;
 
 public class UserNotFoundException extends UserException {
 
-    public UserNotFoundException(UserErrorCode userErrorCode) {
-        super(userErrorCode);
+    public UserNotFoundException() {
+        super(UserErrorCode.USER_NOT_FOUND);
     }
 }

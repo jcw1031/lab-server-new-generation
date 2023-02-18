@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.file.FileException;
 
 public class ImageNotFoundException extends FileException {
 
-    public ImageNotFoundException(FileErrorCode fileErrorCode) {
-        super(fileErrorCode);
+    public ImageNotFoundException() {
+        super(FileErrorCode.IMAGE_NOT_FOUND);
     }
 }

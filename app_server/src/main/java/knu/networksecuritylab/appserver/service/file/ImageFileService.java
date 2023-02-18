@@ -1,10 +1,9 @@
 package knu.networksecuritylab.appserver.service.file;
 
 import knu.networksecuritylab.appserver.entity.book.Image;
-import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
-import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
 import knu.networksecuritylab.appserver.exception.file.impl.FileStorageException;
 import knu.networksecuritylab.appserver.exception.file.impl.ImageNotReadable;
+import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class ImageFileService implements FileService {
         try {
             Files.createDirectories(this.fileLocation);
         } catch (IOException e) {
-            throw new FileStorageException(FileErrorCode.CAN_NOT_CREATE_DIRECTORY);
+            throw new FileStorageException();
         }
     }
 
@@ -90,7 +89,7 @@ public class ImageFileService implements FileService {
             return ".png";
         }
 
-        throw new InvalidFileExtensionException(FileErrorCode.INVALID_FILE_EXTENSION);
+        throw new InvalidFileExtensionException();
     }
 
     @Override
@@ -100,7 +99,7 @@ public class ImageFileService implements FileService {
                     new FileInputStream(STORAGE_PATH + File.separator + image.getImageName());
             return fileInputStream.readAllBytes();
         } catch (IOException e) {
-            throw new ImageNotReadable(FileErrorCode.IMAGE_NOT_READABLE);
+            throw new ImageNotReadable();
         }
     }
 }

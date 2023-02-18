@@ -8,7 +8,6 @@ import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Image;
 import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.exception.book.impl.BookDuplicateException;
-import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
 import knu.networksecuritylab.appserver.exception.book.impl.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
@@ -56,7 +55,7 @@ public class BasicBookService implements BookService {
         bookRepository.findByBookName(bookRegisterRequestDto.getBookName())
                 .ifPresent(book -> {
                     if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
-                        throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
+                        throw new BookDuplicateException();
                     }
                 });
 
@@ -89,7 +88,7 @@ public class BasicBookService implements BookService {
         }
 
         book = bookRepository.findByIdWithBookTags(bookId)
-                .orElseThrow(() -> new BookNotFoundException(BookErrorCode.BOOK_NOT_FOUND));
+                .orElseThrow(() -> new BookNotFoundException());
         List<String> tagList = tagService.bookTagsToTagNameList(book.getBookTags());
 
         return book.toBookInfoDto(tagList, imageList);
