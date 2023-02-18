@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
@@ -54,7 +53,6 @@ public class User implements UserDetails {
     @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Position position = Position.MEMBER;
 
@@ -62,14 +60,11 @@ public class User implements UserDetails {
     private List<String> roles;
 
     @Builder
-    public User(Long id, String studentId, String password, String email, String name,
-                Position position, List<String> roles) {
-        this.id = id;
+    public User(String studentId, String password, String email, String name, List<String> roles) {
         this.studentId = studentId;
         this.password = password;
         this.email = email;
         this.name = name;
-        this.position = position;
         this.roles = roles;
     }
 
