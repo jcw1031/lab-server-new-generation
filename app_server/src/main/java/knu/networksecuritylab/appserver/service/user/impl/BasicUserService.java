@@ -41,12 +41,12 @@ public class BasicUserService implements UserService {
     @Override
     @Transactional
     public Long join(final SignUpRequestDto signUpRequestDTO) {
-        User user = checkUsernameDuplicate(signUpRequestDTO);
+        User user = validateUsernameDuplicate(signUpRequestDTO);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
 
-    private User checkUsernameDuplicate(final SignUpRequestDto signUpRequestDto) {
+    private User validateUsernameDuplicate(final SignUpRequestDto signUpRequestDto) {
         String studentId = signUpRequestDto.getStudentId();
         userRepository.findByStudentId(studentId)
                 .ifPresent(user -> {
@@ -59,19 +59,7 @@ public class BasicUserService implements UserService {
     @Override
     @Transactional
     public String signIn(final SignInRequestDto signInRequestDto) {
-        String studentId = signInRequestDto.getStudentId();
-        String password = signInRequestDto.getPassword();
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(studentId, password);
-
-        Authentication authentication;
-        try {
-            authentication = authenticationManagerBuilder.getObject()
-                    .authenticate(authenticationToken);
-        } catch (AuthenticationException e) {
-            throw new InvalidUsernameOrPassword(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
-        }
+        Authentication authentication = getAuthentication(signInRequestDto);
 
         if (authentication.isAuthenticated()) {
             User user = (User) authentication.getPrincipal();
@@ -85,6 +73,21 @@ public class BasicUserService implements UserService {
         }
 
         throw new InvalidAuthenticationException(UserErrorCode.INVALID_AUTHENTICATION);
+    }
+
+    private Authentication getAuthentication(final SignInRequestDto signInRequestDto) {
+        String studentId = signInRequestDto.getStudentId();
+        String password = signInRequestDto.getPassword();
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(studentId, password);
+
+        try {
+            return authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+        } catch (AuthenticationException e) {
+            throw new InvalidUsernameOrPassword(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
+        }
     }
 
     @Override

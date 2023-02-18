@@ -107,8 +107,7 @@ public class User implements UserDetails {
     public static User of(SignUpRequestDto signUpRequestDto, PasswordEncoder passwordEncoder) {
         return User.builder()
                 .studentId(signUpRequestDto.getStudentId())
-                .password(passwordEncoder.encode(
-                        signUpRequestDto.getPassword()))
+                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
                 .name(signUpRequestDto.getName())
                 .email(signUpRequestDto.getEmail())
                 .roles(Collections.singletonList("ROLE_USER"))

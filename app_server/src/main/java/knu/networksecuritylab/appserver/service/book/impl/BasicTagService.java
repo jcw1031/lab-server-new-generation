@@ -40,7 +40,7 @@ public class BasicTagService implements TagService {
     }
 
     @Override
-    public List<String> bookTagsToTagNameList(List<BookTag> bookTags) {
+    public List<String> bookTagsToTagNameList(final List<BookTag> bookTags) {
         List<String> tagList = new ArrayList<>();
         bookTags.forEach(bookTag -> {
             String tagName = bookTag.getTag().getTagName();

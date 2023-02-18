@@ -17,7 +17,7 @@ public class BasicImageService implements ImageService {
     private final FileService fileService;
 
     @Override
-    public byte[] bookImage(Long imageId) {
+    public byte[] bookImage(final Long imageId) {
         Image image = imageRepository.findById(imageId).orElseThrow(() ->
                 new ImageNotFoundException(FileErrorCode.IMAGE_NOT_FOUND));
         return fileService.imageConvertToBytes(image);

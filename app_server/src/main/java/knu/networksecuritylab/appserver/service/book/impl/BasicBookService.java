@@ -81,7 +81,7 @@ public class BasicBookService implements BookService {
     }
 
     @Override
-    public BookInfoResponseDto bookInfo(Long bookId) {
+    public BookInfoResponseDto bookInfo(final Long bookId) {
         List<Long> imageList = new ArrayList<>();
         Book book = bookRepository.findByIdIfImagesExists(bookId).orElse(null);
         if (book != null) {
@@ -95,7 +95,7 @@ public class BasicBookService implements BookService {
         return book.toBookInfoDto(tagList, imageList);
     }
 
-    private List<Long> bookImagesToImageIdList(List<Image> images) {
+    private List<Long> bookImagesToImageIdList(final List<Image> images) {
         List<Long> imageList = new ArrayList<>();
         for (Image image : images) {
             imageList.add(image.getId());
@@ -104,7 +104,7 @@ public class BasicBookService implements BookService {
     }
 
     @Override
-    public List<BookListResponseDto> bookSearch(String keyword) {
+    public List<BookListResponseDto> bookSearch(final String keyword) {
         List<BookListResponseDto> bookList = new ArrayList<>();
         bookRepository.searchBookByName(keyword)
                 .forEach(book -> bookList.add(book.toBookListDto()));
