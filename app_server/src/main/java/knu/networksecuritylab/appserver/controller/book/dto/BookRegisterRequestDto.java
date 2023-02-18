@@ -21,5 +21,5 @@ public class BookRegisterRequestDto {
     private String bookPublisher;
     @PositiveOrZero(message = "책 재고는 0 또는 양수이어야 합니다.")
     private int bookStock = 1;
-    private final List<String> tags = new ArrayList<>();
+    private List<String> bookTagList = new ArrayList<>();
 }

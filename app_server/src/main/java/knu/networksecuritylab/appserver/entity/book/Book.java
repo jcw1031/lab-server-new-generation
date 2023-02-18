@@ -1,12 +1,14 @@
 package knu.networksecuritylab.appserver.entity.book;
 
 import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
+import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +37,10 @@ public class Book {
     private int bookStock;
 
     @OneToMany(mappedBy = "book")
-    private final List<BookTag> bookTags = new ArrayList<>();
+    private List<BookTag> bookTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
 
     @Builder
     public Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
@@ -54,14 +59,22 @@ public class Book {
                 .build();
     }
 
-    public BookInfoResponseDto toDto() {
-        BookInfoResponseDto bookInfoResponseDto = BookInfoResponseDto.builder()
+    public BookListResponseDto toBookListDto() {
+        return BookListResponseDto.builder()
+                .id(this.id)
+                .bookName(this.bookName)
+                .bookAuthor(this.bookAuthor)
+                .build();
+    }
+
+    public BookInfoResponseDto toBookInfoDto(final List<String> tagList, final List<Long> imageList) {
+        return BookInfoResponseDto.builder()
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
                 .bookPublisher(this.bookPublisher)
                 .bookStock(this.bookStock)
+                .bookTagList(tagList)
+                .bookImageList(imageList)
                 .build();
-        bookInfoResponseDto.updateTags(this.bookTags);
-        return bookInfoResponseDto;
     }
 }

@@ -35,7 +35,7 @@ public class TestController {
     static class TestEntity {
 
         private String bookName;
-        private final List<String> tags = new ArrayList<>();
+        private final List<String> tagList = new ArrayList<>();
 
         public TestEntity() {
         }
@@ -44,8 +44,8 @@ public class TestController {
             return bookName;
         }
 
-        public List<String> getTags() {
-            return tags;
+        public List<String> getTagList() {
+            return tagList;
         }
     }
 }

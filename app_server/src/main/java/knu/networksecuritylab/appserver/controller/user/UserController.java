@@ -7,6 +7,8 @@ import knu.networksecuritylab.appserver.controller.user.dto.WithdrawalRequestDto
 import knu.networksecuritylab.appserver.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @RestController
@@ -40,15 +43,21 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<UserInfoResponseDto> userInfo(final @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<UserInfoResponseDto> userInfo(
+            final @RequestHeader("Authorization") String authorization
+    ) {
         UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(authorization);
         return ResponseEntity.ok().body(userInfoResponseDto);
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> withdrawalMembership(final @RequestHeader("Authorization") String authorization,
-                                                       final @RequestBody WithdrawalRequestDto withdrawalRequestDto) {
+    public ResponseEntity<String> withdrawalMembership(
+            final @RequestHeader("Authorization") String authorization,
+            final @RequestBody WithdrawalRequestDto withdrawalRequestDto
+    ) {
         String result = userService.deleteUser(authorization, withdrawalRequestDto);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE,
+                        MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
+                .body(result);
     }
 }
