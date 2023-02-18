@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.exception.handler;
 
-import knu.networksecuritylab.appserver.exception.dto.ErrorResponseDto;
+import knu.networksecuritylab.appserver.exception.handler.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ public class CommonExceptionHandler {
             HttpServletRequest request
     ) {
         List<String> messages = new ArrayList<>();
-        messages.add("경로 변수 타입이 올바르지 않습니다.");
+        messages.add("타입이 올바르지 않습니다.");
         log.error("Messages = {}", messages);
 
         ErrorResponseDto errorResponseDto = createErrorResponseDto(

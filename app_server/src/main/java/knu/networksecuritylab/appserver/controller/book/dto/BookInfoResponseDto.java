@@ -16,15 +16,17 @@ public class BookInfoResponseDto {
     private String bookAuthor;
     private String bookPublisher;
     private int bookStock;
-    private List<String> bookTags = new ArrayList<>();
+    private List<String> bookTagList = new ArrayList<>();
+    private List<Long> bookImageList = new ArrayList<>();
 
     @Builder
     public BookInfoResponseDto(String bookName, String bookAuthor, String bookPublisher,
-                               int bookStock, List<String> bookTags) {
+                               int bookStock, List<String> bookTagList, List<Long> bookImageList) {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
         this.bookStock = bookStock;
-        this.bookTags = bookTags;
+        this.bookTagList = bookTagList;
+        this.bookImageList = bookImageList;
     }
 }

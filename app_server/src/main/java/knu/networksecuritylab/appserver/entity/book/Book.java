@@ -67,13 +67,14 @@ public class Book {
                 .build();
     }
 
-    public BookInfoResponseDto toBookInfoDto(final List<String> tags) {
+    public BookInfoResponseDto toBookInfoDto(final List<String> tagList, final List<Long> imageList) {
         return BookInfoResponseDto.builder()
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
                 .bookPublisher(this.bookPublisher)
                 .bookStock(this.bookStock)
-                .bookTags(tags)
+                .bookTagList(tagList)
+                .bookImageList(imageList)
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import knu.networksecuritylab.appserver.controller.book.dto.BookInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookListResponseDto;
 import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
 import knu.networksecuritylab.appserver.service.book.BookService;
+import knu.networksecuritylab.appserver.service.book.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -33,33 +34,19 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final ImageService imageService;
 
     @PostMapping("")
     public ResponseEntity<String> registerBook(
             @RequestPart(value = "bookImages", required = false) final List<MultipartFile> bookImages,
             @RequestParam("book") final BookRegisterRequestDto bookRegisterRequestDto
     ) throws IOException {
-        log.info("bookRegisterRequestDto = {}, bookImages size = {}",
-                bookRegisterRequestDto, bookImages.size());
-
         Long bookId = bookService.registerBook(bookImages, bookRegisterRequestDto);
         return ResponseEntity.created(URI.create("/api/v1/books/" + bookId))
                 .header(HttpHeaders.CONTENT_TYPE,
                         MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
                 .body("도서 등록 완료");
     }
-
-    /*@PostMapping("")
-    public ResponseEntity<String> registerBook(
-            @RequestBody @Valid final BookRegisterRequestDto bookRegisterRequestDto
-    ) {
-        log.info("bookRegisterRequestDto = {}", bookRegisterRequestDto);
-        Long bookId = bookService.registerBook(bookRegisterRequestDto);
-        return ResponseEntity.created(URI.create("/api/v1/books/" + bookId))
-                .header(HttpHeaders.CONTENT_TYPE,
-                        MediaType.TEXT_PLAIN_VALUE + ";charset=" + StandardCharsets.UTF_8)
-                .body("도서 등록 완료");
-    }*/
 
     @GetMapping("")
     public ResponseEntity<List<BookListResponseDto>> randomBookListTen() {
@@ -71,6 +58,14 @@ public class BookController {
     public ResponseEntity<BookInfoResponseDto> bookDetailsInfo(@PathVariable final Long bookId) {
         BookInfoResponseDto bookInfoResponseDto = bookService.bookInfo(bookId);
         return ResponseEntity.ok().body(bookInfoResponseDto);
+    }
+
+    @GetMapping(value = "/images/{imageId}",
+            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE}
+    )
+    public ResponseEntity<byte[]> bookImage(@PathVariable("imageId") final Long imageId) {
+        byte[] imageBytes = imageService.bookImage(imageId);
+        return ResponseEntity.ok().body(imageBytes);
     }
 
     @GetMapping("/search")

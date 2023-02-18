@@ -1,7 +1,7 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.service.user.BasicUserService;
+import knu.networksecuritylab.appserver.service.user.impl.BasicUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

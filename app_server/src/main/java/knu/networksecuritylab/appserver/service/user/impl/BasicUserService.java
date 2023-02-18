@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.service.user;
+package knu.networksecuritylab.appserver.service.user.impl;
 
 import knu.networksecuritylab.appserver.config.jwt.JwtProvider;
 import knu.networksecuritylab.appserver.config.jwt.JwtUtils;
@@ -7,12 +7,13 @@ import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
 import knu.networksecuritylab.appserver.controller.user.dto.UserInfoResponseDto;
 import knu.networksecuritylab.appserver.controller.user.dto.WithdrawalRequestDto;
 import knu.networksecuritylab.appserver.entity.user.User;
-import knu.networksecuritylab.appserver.exception.user.InvalidAuthenticationException;
-import knu.networksecuritylab.appserver.exception.user.InvalidUsernameOrPassword;
-import knu.networksecuritylab.appserver.exception.user.UserNotFoundException;
-import knu.networksecuritylab.appserver.exception.user.UsernameDuplicateException;
+import knu.networksecuritylab.appserver.exception.user.impl.InvalidAuthenticationException;
+import knu.networksecuritylab.appserver.exception.user.impl.InvalidUsernameOrPassword;
+import knu.networksecuritylab.appserver.exception.user.impl.UserNotFoundException;
+import knu.networksecuritylab.appserver.exception.user.impl.UsernameDuplicateException;
 import knu.networksecuritylab.appserver.exception.user.UserErrorCode;
 import knu.networksecuritylab.appserver.repository.UserRepository;
+import knu.networksecuritylab.appserver.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,11 +21,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicUserService implements UserService {
 
     private final UserRepository userRepository;
@@ -36,13 +39,14 @@ public class BasicUserService implements UserService {
     private final String TOKEN_PREFIX = "Bearer ";
 
     @Override
+    @Transactional
     public Long join(final SignUpRequestDto signUpRequestDTO) {
-        User user = checkUsernameDuplicate(signUpRequestDTO);
+        User user = validateUsernameDuplicate(signUpRequestDTO);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
 
-    private User checkUsernameDuplicate(final SignUpRequestDto signUpRequestDto) {
+    private User validateUsernameDuplicate(final SignUpRequestDto signUpRequestDto) {
         String studentId = signUpRequestDto.getStudentId();
         userRepository.findByStudentId(studentId)
                 .ifPresent(user -> {
@@ -53,20 +57,9 @@ public class BasicUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public String signIn(final SignInRequestDto signInRequestDto) {
-        String studentId = signInRequestDto.getStudentId();
-        String password = signInRequestDto.getPassword();
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(studentId, password);
-
-        Authentication authentication;
-        try {
-            authentication = authenticationManagerBuilder.getObject()
-                    .authenticate(authenticationToken);
-        } catch (AuthenticationException e) {
-            throw new InvalidUsernameOrPassword(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
-        }
+        Authentication authentication = getAuthentication(signInRequestDto);
 
         if (authentication.isAuthenticated()) {
             User user = (User) authentication.getPrincipal();
@@ -82,6 +75,21 @@ public class BasicUserService implements UserService {
         throw new InvalidAuthenticationException(UserErrorCode.INVALID_AUTHENTICATION);
     }
 
+    private Authentication getAuthentication(final SignInRequestDto signInRequestDto) {
+        String studentId = signInRequestDto.getStudentId();
+        String password = signInRequestDto.getPassword();
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(studentId, password);
+
+        try {
+            return authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+        } catch (AuthenticationException e) {
+            throw new InvalidUsernameOrPassword(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
+        }
+    }
+
     @Override
     public UserInfoResponseDto getUserInfo(final String authorization) {
         String token = jwtUtils.resolveToken(authorization);
@@ -94,6 +102,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public String deleteUser(final String authorization, final WithdrawalRequestDto withdrawalRequestDto) {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);

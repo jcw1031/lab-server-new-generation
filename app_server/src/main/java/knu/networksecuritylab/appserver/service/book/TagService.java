@@ -9,7 +9,7 @@ public interface TagService {
 
     List<String> tagList();
 
-    List<Tag> tagArrangement(List<String> tags);
+    List<Tag> tagArrangement(List<String> tagList);
 
-    List<String> listConvertBookTagToString(List<BookTag> bookTags);
+    List<String> bookTagsToTagNameList(List<BookTag> bookTags);
 }

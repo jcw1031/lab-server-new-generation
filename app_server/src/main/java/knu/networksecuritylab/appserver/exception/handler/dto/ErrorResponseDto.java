@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.exception.dto;
+package knu.networksecuritylab.appserver.exception.handler.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,16 +1,19 @@
 package knu.networksecuritylab.appserver.service.file;
 
 import knu.networksecuritylab.appserver.entity.book.Image;
-import knu.networksecuritylab.appserver.exception.book.InvalidFileExtensionException;
+import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
 import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
-import knu.networksecuritylab.appserver.exception.file.FileStorageException;
+import knu.networksecuritylab.appserver.exception.file.impl.FileStorageException;
+import knu.networksecuritylab.appserver.exception.file.impl.ImageNotReadable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,15 +24,16 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class ImageFileService implements FileService {
 
     private Path fileLocation;
-//    private final String LOCATION = "C:\\Users\\jcw00\\lab_service_images";
-    private final String LOCATION = "/Users/jcw/lab_service_images";
+    //    private final String LOCATION = "C:\\Users\\jcw00\\lab_service_images";
+    private final String STORAGE_PATH = "/Users/jcw/lab_service_images";
 
     @PostConstruct
     private void init() {
-        this.fileLocation = Paths.get(LOCATION).toAbsolutePath().normalize();
+        this.fileLocation = Paths.get(STORAGE_PATH).toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileLocation);
@@ -39,15 +43,17 @@ public class ImageFileService implements FileService {
     }
 
     @Override
-    public List<Image> parseFiles(final List<MultipartFile> files) throws IOException {
+    @Transactional
+    public List<Image> multipartFilesStoreAndConvertToImages(final List<MultipartFile> multipartFiles)
+            throws IOException {
         log.info("ImageFileService.parseFiles() start");
         List<Image> images = new ArrayList<>();
-        if (CollectionUtils.isEmpty(files)) {
+        if (CollectionUtils.isEmpty(multipartFiles)) {
             log.info("files is empty");
             return images;
         }
 
-        for (MultipartFile multipartFile : files) {
+        for (MultipartFile multipartFile : multipartFiles) {
             log.info("MultipartFile List Parsing Start");
             if (multipartFile.isEmpty()) {
                 break;
@@ -85,5 +91,16 @@ public class ImageFileService implements FileService {
         }
 
         throw new InvalidFileExtensionException(FileErrorCode.INVALID_FILE_EXTENSION);
+    }
+
+    @Override
+    public byte[] imageConvertToBytes(Image image) {
+        try {
+            FileInputStream fileInputStream =
+                    new FileInputStream(STORAGE_PATH + File.separator + image.getImageName());
+            return fileInputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new ImageNotReadable(FileErrorCode.IMAGE_NOT_READABLE);
+        }
     }
 }
