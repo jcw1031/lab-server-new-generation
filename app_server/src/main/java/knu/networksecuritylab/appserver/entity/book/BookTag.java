@@ -36,8 +36,15 @@ public class BookTag {
     private Tag tag;
 
     @Builder
-    public BookTag(Book book, Tag tag) {
+    private BookTag(Book book, Tag tag) {
         this.book = book;
         this.tag = tag;
+    }
+
+    public static BookTag of(Book book, Tag tag) {
+        return BookTag.builder()
+                .book(book)
+                .tag(tag)
+                .build();
     }
 }

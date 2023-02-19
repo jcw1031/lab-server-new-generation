@@ -34,10 +34,9 @@ public class Image {
     private Book book;
 
     @Builder
-    public Image(String imageName, Long imageSize, Book book) {
+    private Image(String imageName, Long imageSize) {
         this.imageName = imageName;
         this.imageSize = imageSize;
-        this.book = book;
     }
 
     public void setBook(Book book) {

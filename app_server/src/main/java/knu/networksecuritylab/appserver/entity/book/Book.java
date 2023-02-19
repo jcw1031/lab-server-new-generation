@@ -43,14 +43,14 @@ public class Book {
     private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
+    private Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
         this.bookStock = bookStock;
     }
 
-    public static Book of(BookRegisterRequestDto bookRegisterRequestDto) {
+    public static Book from(BookRegisterRequestDto bookRegisterRequestDto) {
         return Book.builder()
                 .bookName(bookRegisterRequestDto.getBookName())
                 .bookAuthor(bookRegisterRequestDto.getBookAuthor())

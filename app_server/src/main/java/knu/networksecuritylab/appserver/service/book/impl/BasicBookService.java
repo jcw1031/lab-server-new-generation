@@ -61,11 +61,11 @@ public class BasicBookService implements BookService {
                     }
                 });
 
-        return Book.of(bookRegisterRequestDto);
+        return Book.from(bookRegisterRequestDto);
     }
 
     private void bookTagging(final List<Tag> tags, final Book book) {
-        tags.forEach(tag -> bookTagRepository.save(new BookTag(book, tag)));
+        tags.forEach(tag -> bookTagRepository.save(BookTag.of(book, tag)));
     }
 
     @Override

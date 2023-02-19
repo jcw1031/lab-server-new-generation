@@ -97,7 +97,7 @@ public class BasicUserService implements UserService {
         User user = userRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new UserNotFoundException());
 
-        return user.toDto();
+        return user.toUserInfoDto();
     }
 
     @Override

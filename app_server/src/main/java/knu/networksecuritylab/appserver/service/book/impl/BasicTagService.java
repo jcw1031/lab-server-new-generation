@@ -31,10 +31,9 @@ public class BasicTagService implements TagService {
     public List<Tag> tagArrangement(final List<String> tagList) {
         List<Tag> tags = new ArrayList<>();
         tagList.forEach(tagName -> {
-            Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
-                    tagRepository.save(new Tag(tagName))
-            );
-            if(!tags.contains(tag)) {
+            Tag tag = tagRepository.findByTagName(tagName)
+                    .orElseGet(() -> tagRepository.save(Tag.from(tagName)));
+            if (!tags.contains(tag)) {
                 tags.add(tag);
             }
         });

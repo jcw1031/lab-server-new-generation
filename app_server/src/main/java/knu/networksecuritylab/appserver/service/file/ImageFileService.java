@@ -45,15 +45,12 @@ public class ImageFileService implements FileService {
     @Transactional
     public List<Image> multipartFilesStoreAndConvertToImages(final List<MultipartFile> multipartFiles)
             throws IOException {
-        log.info("ImageFileService.parseFiles() start");
         List<Image> images = new ArrayList<>();
         if (CollectionUtils.isEmpty(multipartFiles)) {
-            log.info("files is empty");
             return images;
         }
 
         for (MultipartFile multipartFile : multipartFiles) {
-            log.info("MultipartFile List Parsing Start");
             if (multipartFile.isEmpty()) {
                 break;
             }
@@ -76,8 +73,6 @@ public class ImageFileService implements FileService {
             images.add(image);
         }
 
-        log.info("MultipartFile List Parsing End");
-        log.info("images size = {}", images.size());
         return images;
     }
 
@@ -108,7 +103,8 @@ public class ImageFileService implements FileService {
         for (String imageName : imageNameList) {
             try {
                 Files.delete(Paths.get(STORAGE_PATH + File.separator + imageName));
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
     }
 }

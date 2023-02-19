@@ -60,7 +60,7 @@ public class User implements UserDetails {
     private List<String> roles;
 
     @Builder
-    public User(String studentId, String password, String email, String name, List<String> roles) {
+    private User(String studentId, String password, String email, String name, List<String> roles) {
         this.studentId = studentId;
         this.password = password;
         this.email = email;
@@ -109,7 +109,7 @@ public class User implements UserDetails {
                 .build();
     }
 
-    public UserInfoResponseDto toDto() {
+    public UserInfoResponseDto toUserInfoDto() {
         return UserInfoResponseDto.builder()
                 .studentId(this.studentId)
                 .name(this.name)

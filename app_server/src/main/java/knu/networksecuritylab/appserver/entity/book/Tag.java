@@ -32,7 +32,13 @@ public class Tag {
     private final List<BookTag> bookTags = new ArrayList<>();
 
     @Builder
-    public Tag(String tagName) {
+    private Tag(String tagName) {
         this.tagName = tagName;
+    }
+
+    public static Tag from(String tagName) {
+        return Tag.builder()
+                .tagName(tagName)
+                .build();
     }
 }
