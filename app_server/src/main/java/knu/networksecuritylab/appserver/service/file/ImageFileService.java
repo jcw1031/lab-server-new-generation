@@ -27,7 +27,7 @@ import java.util.UUID;
 public class ImageFileService implements FileService {
 
     private Path fileLocation;
-    //    private final String LOCATION = "C:\\Users\\jcw00\\lab_service_images";
+//    private final String STORAGE_PATH = "C:\\Users\\security915\\지찬우\\lab_service_image";
     private final String STORAGE_PATH = "/Users/jcw/lab_service_images";
 
     @PostConstruct
