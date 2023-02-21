@@ -115,8 +115,8 @@ public class BasicBookService implements BookService {
                     List<String> imageNameList = imageService.imagesToImageNameList(book.getImages());
                     fileService.removeImages(imageNameList);
                 });
-        Book book = bookRepository.findById(bookId).orElseThrow(() ->
-                new BookNotFoundException());
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException());
         bookRepository.delete(book);
     }
 }
