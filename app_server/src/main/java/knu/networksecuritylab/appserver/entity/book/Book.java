@@ -36,7 +36,7 @@ public class Book {
     @PositiveOrZero(message = "책 재고는 0 또는 양수이어야 합니다.")
     private int bookStock;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookTag> bookTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)

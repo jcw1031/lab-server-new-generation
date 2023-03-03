@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -20,9 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.persistence.JoinColumn;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -37,26 +36,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
     @Column(unique = true)
-    @NotBlank(message = "학번은 비어있을 수 없습니다.")
-    @Pattern(regexp = "^\\d{9}$", message = "학번 형식이 맞지 않습니다. (9자리 정수)")
     private String studentId;
-
-    @NotBlank(message = "비밀번호는 비어있을 수 없습니다.")
     private String password;
-
-    @NotBlank(message = "이메일은 비어있을 수 없습니다.")
-    @Email(message = "이메일 형식이 맞지 않습니다.")
     private String email;
-
-    @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
     @Enumerated(EnumType.STRING)
     private Position position = Position.MEMBER;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role_name")
     private List<String> roles;
 
     @Builder
