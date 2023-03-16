@@ -107,7 +107,7 @@ public class BasicBookService implements BookService {
     @Override
     public List<BookListResponseDto> bookSearch(final String keyword) {
         List<BookListResponseDto> bookList = new ArrayList<>();
-        bookRepository.searchBookByName(PageRequest.of(0, 100), keyword)
+        bookRepository.searchBookByName(keyword)
                 .forEach(book -> {
                     List<BookTag> bookTags = book.getBookTags();
                     List<String> tagList = tagService.bookTagsToTagNameList(bookTags);

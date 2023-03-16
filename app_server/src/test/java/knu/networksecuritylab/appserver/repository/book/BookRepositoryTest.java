@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -29,7 +28,7 @@ class BookRepositoryTest {
         Book savedBook = bookRepository.save(book);
 
         //when
-        List<Book> bookList = bookRepository.searchBookByName(PageRequest.of(0, 1000), "지");
+        List<Book> bookList = bookRepository.searchBookByName("지");
 
         //then
         Assertions.assertThat(bookList.size()).isEqualTo(1);
