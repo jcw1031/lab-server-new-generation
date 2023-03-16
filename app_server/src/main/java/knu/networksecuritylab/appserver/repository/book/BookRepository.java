@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.repository.book;
 
 import knu.networksecuritylab.appserver.entity.book.Book;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,12 +16,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b JOIN FETCH b.images WHERE b.id = :bookId")
     Optional<Book> findByIdIfImagesExists(@Param("bookId") Long id);
 
-    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag WHERE b.id = :bookId")
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt" +
+            " LEFT JOIN FETCH bt.tag WHERE b.id = :bookId")
     Optional<Book> findByIdWithBookTags(@Param("bookId") Long id);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM Book ORDER BY RAND() LIMIT 10")
-    List<Book> findBookRandomList();
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag ORDER BY RAND()")
+    List<Book> findBookRandomList(Pageable pageable);
 
-    @Query("SELECT b FROM Book b WHERE b.bookName LIKE %:keyword%")
-    List<Book> searchBookByName(@Param("keyword") String keyword);
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag WHERE b.bookName LIKE %:keyword%")
+    List<Book> searchBookByName(Pageable pageable, @Param("keyword") String keyword);
 }

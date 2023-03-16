@@ -59,11 +59,12 @@ public class Book {
                 .build();
     }
 
-    public BookListResponseDto toBookListDto() {
+    public BookListResponseDto toBookListDto(List<String> tagList) {
         return BookListResponseDto.builder()
                 .id(this.id)
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
+                .bookTagList(tagList)
                 .build();
     }
 

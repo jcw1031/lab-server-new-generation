@@ -17,6 +17,7 @@ import knu.networksecuritylab.appserver.service.book.TagService;
 import knu.networksecuritylab.appserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +43,6 @@ public class BasicBookService implements BookService {
     public Long registerBook(
             final List<MultipartFile> files,
             final BookRegisterRequestDto bookRegisterRequestDto) throws IOException {
-        log.info("tagList = {}", bookRegisterRequestDto.getBookTagList());
         List<Tag> tags = tagService.tagArrangement(bookRegisterRequestDto.getBookTagList());
 
         Book book = checkDuplicateBook(bookRegisterRequestDto);
@@ -71,8 +71,13 @@ public class BasicBookService implements BookService {
     @Override
     public List<BookListResponseDto> bookList() {
         List<BookListResponseDto> bookList = new ArrayList<>();
-        bookRepository.findBookRandomList()
-                .forEach(book -> bookList.add(book.toBookListDto()));
+        bookRepository.findBookRandomList(PageRequest.of(0, 10))
+                .forEach(book -> {
+                    List<BookTag> bookTags = book.getBookTags();
+                    List<String> tagList = tagService.bookTagsToTagNameList(bookTags);
+                    bookList.add(book.toBookListDto(tagList));
+
+                });
         return bookList;
     }
 
@@ -102,8 +107,12 @@ public class BasicBookService implements BookService {
     @Override
     public List<BookListResponseDto> bookSearch(final String keyword) {
         List<BookListResponseDto> bookList = new ArrayList<>();
-        bookRepository.searchBookByName(keyword)
-                .forEach(book -> bookList.add(book.toBookListDto()));
+        bookRepository.searchBookByName(PageRequest.of(0, 100), keyword)
+                .forEach(book -> {
+                    List<BookTag> bookTags = book.getBookTags();
+                    List<String> tagList = tagService.bookTagsToTagNameList(bookTags);
+                    bookList.add(book.toBookListDto(tagList));
+                });
         return bookList;
     }
 

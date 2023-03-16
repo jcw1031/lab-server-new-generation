@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,15 +23,15 @@ class BookRepositoryTest {
     void bookSearchByNameTest() throws Exception {
         //given
         Book book = Book.builder()
-                .bookName("자바의 정석 1")
-                .bookAuthor("남궁성")
+                .bookName("킹지찬우")
+                .bookAuthor("지찬우")
                 .build();
         Book savedBook = bookRepository.save(book);
 
         //when
-        List<Book> bookList = bookRepository.searchBookByName("자바");
+        List<Book> bookList = bookRepository.searchBookByName(PageRequest.of(0, 1000), "지");
 
         //then
-        Assertions.assertThat(bookList).contains(savedBook);
+        Assertions.assertThat(bookList.size()).isEqualTo(1);
     }
 }
