@@ -22,11 +22,10 @@ logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.type: trace
-#    org.apache.coyote.http11: debug
-    knu.networksecuritylab.appserver: info
+    org.apache.coyote.http11: debug
 
 jwt:
-  secret: KNU_NETWORK_SECURITY_LAB
+  secret: ENC(NqtOtV84A0gcFkXPAJxFu4Y4ooNOGXaHqh6JHwKevXl1k8unHAGybw==)
 
 server:
   port: 8022
