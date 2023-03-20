@@ -20,9 +20,7 @@ public class RestTemplateTest {
                         new Header("Authorization", "94fc3617b1539ebed9040efcf4c90ccb8d193cb2")
                 );
         String name = responseEntity.getBody()[0].getName();
-        String fullName = responseEntity.getBody()[0].getFullName();
         System.out.println("name = " + name);
-        System.out.println("fullName = " + fullName);
     }
 
     @Test
@@ -35,8 +33,8 @@ public class RestTemplateTest {
                         new Header("Authorization", "94fc3617b1539ebed9040efcf4c90ccb8d193cb2")
                 );
 
-        Map body = responseEntity.getBody();
-        for (Object key : body.keySet()) {
+        Map<String, Long> body = Map.copyOf(responseEntity.getBody());
+        for (String key : body.keySet()) {
             System.out.println("key: " + key + ", value: " + body.get(key));
         }
     }

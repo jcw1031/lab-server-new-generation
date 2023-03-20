@@ -1,43 +1,54 @@
 package knu.networksecuritylab.appserver.service.github;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import knu.networksecuritylab.appserver.api.GithubApi;
 import knu.networksecuritylab.appserver.controller.github.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.entity.github.GithubRepository;
+import knu.networksecuritylab.appserver.entity.github.RepositoryLanguage;
+import knu.networksecuritylab.appserver.repository.github.GithubRepoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BasicGithubService implements GithubService {
 
-    private final ObjectMapper objectMapper;
-
-    private RestTemplate restTemplate = new RestTemplate();
-    @Value("${github.token}")
-    private String token;
+    private final GithubApi githubApi;
+    private final GithubRepoRepository githubRepoRepository;
 
     @Override
+    @Transactional
     public void refreshReposLanguageInfo() {
-        List<OrganizationRepositoryDto> organizationRepositories = getOrganizationRepositories();
+        List<OrganizationRepositoryDto> organizationRepositories = githubApi.getOrganizationRepositories();
+
         for (OrganizationRepositoryDto organizationRepository : organizationRepositories) {
-            
+            GithubRepository githubRepository = GithubRepository.from(organizationRepository);
+            String repositoryName = githubRepository.getRepositoryName();
+
+            Map repositoryLanguagesMap = githubApi.getRepositoryLanguages(repositoryName);
+            mappingRepositoryAndLanguages(githubRepository, repositoryLanguagesMap);
+
+            githubRepoRepository.save(githubRepository);
         }
     }
 
-    private List<OrganizationRepositoryDto> getOrganizationRepositories() {
-        String url = "https://api.github.com/users/KNU-NetworkSecurityLab/repos";
-        Header authorization = new Header("Authorization", token);
+    private List<RepositoryLanguage> mappingRepositoryAndLanguages(
+            GithubRepository repository, Map languages
+    ) {
+        List<RepositoryLanguage> repositoryLanguages = new ArrayList<>();
+        for (Object languageName : languages.keySet()) {
+            Long languageBytes = Long.parseLong(String.valueOf(languages.get(languageName)));
+            RepositoryLanguage repositoryLanguage =
+                    RepositoryLanguage.of(String.valueOf(languageName), languageBytes);
 
-        return Arrays.asList(Objects.requireNonNull(
-                restTemplate.getForObject(url, OrganizationRepositoryDto[].class, authorization))
-        );
+            repositoryLanguage.setGithubRepository(repository);
+            repositoryLanguages.add(repositoryLanguage);
+        }
+        return repositoryLanguages;
     }
 }

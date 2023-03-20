@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.entity.github;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,9 +22,28 @@ public class RepositoryLanguage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "repo_language_id")
     private Long id;
-    private String repositoryLanguageBytes;
+    private String languageName;
+    private Long repositoryLanguageBytes;
 
     @ManyToOne
     @JoinColumn(name = "repository_id")
     private GithubRepository githubRepository;
+
+    @Builder
+    public RepositoryLanguage(String languageName, Long repositoryLanguageBytes) {
+        this.languageName = languageName;
+        this.repositoryLanguageBytes = repositoryLanguageBytes;
+    }
+
+    public static RepositoryLanguage of(String languageName, Long repositoryLanguageBytes) {
+        return RepositoryLanguage.builder()
+                .languageName(languageName)
+                .repositoryLanguageBytes(repositoryLanguageBytes)
+                .build();
+    }
+
+    public void setGithubRepository(GithubRepository githubRepository) {
+        this.githubRepository = githubRepository;
+        githubRepository.getRepositoryLanguages().add(this);
+    }
 }

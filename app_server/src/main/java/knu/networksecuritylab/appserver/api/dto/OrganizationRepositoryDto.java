@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.controller.github.dto;
+package knu.networksecuritylab.appserver.api.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;
