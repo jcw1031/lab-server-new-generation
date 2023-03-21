@@ -3,9 +3,12 @@ package knu.networksecuritylab.appserver.service.github;
 import knu.networksecuritylab.appserver.api.GithubApi;
 import knu.networksecuritylab.appserver.controller.github.dto.OrganizationRepositoryDto;
 import knu.networksecuritylab.appserver.entity.github.GithubRepository;
+import knu.networksecuritylab.appserver.entity.github.LanguageRate;
 import knu.networksecuritylab.appserver.entity.github.RepositoryLanguage;
 import knu.networksecuritylab.appserver.repository.github.GithubRepoRepository;
+import knu.networksecuritylab.appserver.repository.github.LanguageRateRepository;
 import knu.networksecuritylab.appserver.repository.github.LanguageRepository;
+import knu.networksecuritylab.appserver.repository.github.dto.LanguageRateInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class BasicGithubService implements GithubService {
     private final GithubApi githubApi;
     private final GithubRepoRepository githubRepoRepository;
     private final LanguageRepository languageRepository;
+    private final LanguageRateRepository languageRateRepository;
 
     @Override
     @Transactional
@@ -38,6 +42,17 @@ public class BasicGithubService implements GithubService {
             mappingRepositoryAndLanguages(githubRepository, repositoryLanguagesMap);
 
             githubRepoRepository.save(githubRepository);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateLanguageRate() {
+        List<LanguageRateInterface> languageRateInterfaces = languageRepository.calculateLanguageRate();
+
+        for (LanguageRateInterface languageRateInterface : languageRateInterfaces) {
+            log.info("{}", languageRateInterface.getClass());
+            languageRateRepository.save(LanguageRate.from(languageRateInterface));
         }
     }
 

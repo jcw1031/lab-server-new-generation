@@ -23,5 +23,6 @@ public class GithubScheduler {
     public void githubApi() {
         log.info("Github Repository 언어 사용량 통계 갱신 time: " + new Date());
         githubService.refreshReposLanguageInfo();
+        githubService.updateLanguageRate();
     }
 }
