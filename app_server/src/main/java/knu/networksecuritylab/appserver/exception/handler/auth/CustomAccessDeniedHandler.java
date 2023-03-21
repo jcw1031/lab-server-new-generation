@@ -21,8 +21,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
         ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .errorType(HttpStatus.UNAUTHORIZED.name())
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .errorType(HttpStatus.FORBIDDEN.name())
                 .path(request.getRequestURI())
                 .build();
         errorResponseDto.addMessage("접근 권한이 없습니다.");

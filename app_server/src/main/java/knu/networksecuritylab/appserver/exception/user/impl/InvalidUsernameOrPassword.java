@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.user.UserException;
 
 public class InvalidUsernameOrPassword extends UserException {
 
-    public InvalidUsernameOrPassword(UserErrorCode userErrorCode) {
-        super(userErrorCode);
+    public InvalidUsernameOrPassword() {
+        super(UserErrorCode.INVALID_USERNAME_OR_PASSWORD);
     }
 }

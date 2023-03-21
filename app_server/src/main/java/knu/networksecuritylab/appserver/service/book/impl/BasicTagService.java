@@ -6,12 +6,14 @@ import knu.networksecuritylab.appserver.repository.book.TagRepository;
 import knu.networksecuritylab.appserver.service.book.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicTagService implements TagService {
 
     private final TagRepository tagRepository;
@@ -28,13 +30,15 @@ public class BasicTagService implements TagService {
     }
 
     @Override
+    @Transactional
     public List<Tag> tagArrangement(final List<String> tagList) {
         List<Tag> tags = new ArrayList<>();
         tagList.forEach(tagName -> {
-            Tag tag = tagRepository.findByTagName(tagName).orElseGet(() ->
-                    tagRepository.save(new Tag(tagName))
-            );
-            tags.add(tag);
+            Tag tag = tagRepository.findByTagName(tagName)
+                    .orElseGet(() -> tagRepository.save(Tag.from(tagName)));
+            if (!tags.contains(tag)) {
+                tags.add(tag);
+            }
         });
         return tags;
     }

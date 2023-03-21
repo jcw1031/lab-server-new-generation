@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.book.BookException;
 
 public class BookDuplicateException extends BookException {
 
-    public BookDuplicateException(BookErrorCode bookErrorCode) {
-        super(bookErrorCode);
+    public BookDuplicateException() {
+        super(BookErrorCode.BOOK_DUPLICATE);
     }
 }

@@ -8,15 +8,16 @@ import knu.networksecuritylab.appserver.entity.book.BookTag;
 import knu.networksecuritylab.appserver.entity.book.Image;
 import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.exception.book.impl.BookDuplicateException;
-import knu.networksecuritylab.appserver.exception.book.BookErrorCode;
 import knu.networksecuritylab.appserver.exception.book.impl.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
 import knu.networksecuritylab.appserver.service.book.BookService;
+import knu.networksecuritylab.appserver.service.book.ImageService;
 import knu.networksecuritylab.appserver.service.book.TagService;
 import knu.networksecuritylab.appserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,6 +35,7 @@ public class BasicBookService implements BookService {
     private final BookRepository bookRepository;
     private final TagService tagService;
     private final FileService fileService;
+    private final ImageService imageService;
     private final BookTagRepository bookTagRepository;
 
     @Override
@@ -56,27 +57,27 @@ public class BasicBookService implements BookService {
         bookRepository.findByBookName(bookRegisterRequestDto.getBookName())
                 .ifPresent(book -> {
                     if (book.getBookAuthor().equals(bookRegisterRequestDto.getBookAuthor())) {
-                        throw new BookDuplicateException(BookErrorCode.BOOK_DUPLICATE);
+                        throw new BookDuplicateException();
                     }
                 });
 
-        return Book.of(bookRegisterRequestDto);
+        return Book.from(bookRegisterRequestDto);
     }
 
     private void bookTagging(final List<Tag> tags, final Book book) {
-        tags.forEach(tag -> {
-            Optional<BookTag> findBookTag = bookTagRepository.findByBookAndTag(book, tag);
-            if (findBookTag.isEmpty()) {
-                bookTagRepository.save(new BookTag(book, tag));
-            }
-        });
+        tags.forEach(tag -> bookTagRepository.save(BookTag.of(book, tag)));
     }
 
     @Override
     public List<BookListResponseDto> bookList() {
         List<BookListResponseDto> bookList = new ArrayList<>();
-        bookRepository.findBookRandomList()
-                .forEach(book -> bookList.add(book.toBookListDto()));
+        bookRepository.findBookRandomList(PageRequest.of(0, 10))
+                .forEach(book -> {
+                    List<BookTag> bookTags = book.getBookTags();
+                    List<String> tagList = tagService.bookTagsToTagNameList(bookTags);
+                    bookList.add(book.toBookListDto(tagList));
+
+                });
         return bookList;
     }
 
@@ -89,7 +90,7 @@ public class BasicBookService implements BookService {
         }
 
         book = bookRepository.findByIdWithBookTags(bookId)
-                .orElseThrow(() -> new BookNotFoundException(BookErrorCode.BOOK_NOT_FOUND));
+                .orElseThrow(() -> new BookNotFoundException());
         List<String> tagList = tagService.bookTagsToTagNameList(book.getBookTags());
 
         return book.toBookInfoDto(tagList, imageList);
@@ -107,7 +108,24 @@ public class BasicBookService implements BookService {
     public List<BookListResponseDto> bookSearch(final String keyword) {
         List<BookListResponseDto> bookList = new ArrayList<>();
         bookRepository.searchBookByName(keyword)
-                .forEach(book -> bookList.add(book.toBookListDto()));
+                .forEach(book -> {
+                    List<BookTag> bookTags = book.getBookTags();
+                    List<String> tagList = tagService.bookTagsToTagNameList(bookTags);
+                    bookList.add(book.toBookListDto(tagList));
+                });
         return bookList;
+    }
+
+    @Override
+    @Transactional
+    public void removeBook(Long bookId) {
+        bookRepository.findByIdIfImagesExists(bookId)
+                .ifPresent(book -> {
+                    List<String> imageNameList = imageService.imagesToImageNameList(book.getImages());
+                    fileService.removeImages(imageNameList);
+                });
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException());
+        bookRepository.delete(book);
     }
 }

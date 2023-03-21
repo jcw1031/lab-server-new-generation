@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.user.UserException;
 
 public class InvalidAuthenticationException extends UserException {
 
-    public InvalidAuthenticationException(UserErrorCode userErrorCode) {
-        super(userErrorCode);
+    public InvalidAuthenticationException() {
+        super(UserErrorCode.INVALID_AUTHENTICATION);
     }
 }

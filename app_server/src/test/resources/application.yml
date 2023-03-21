@@ -18,8 +18,5 @@ logging:
 #    org.apache.coyote.http11: debug
     knu.networksecuritylab.appserver: info
 
-jwt:
-  secret: KNU_NETWORK_SECURITY_LAB
-
 server:
   port: 8022

@@ -29,7 +29,7 @@ public class AuthenticationConfig {
                 .authorizeRequests()
                 // permitAll() -> 모두 허용     authenticated() -> 인증 필요     hasRole() -> 권한 필요
                 .antMatchers("/api/v1/users/sign-up", "/api/v1/users/sign-in").permitAll()
-                .antMatchers("api/v1/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 // 권한을 확인하는 과정에서 통과하지 못하는 예외가 발생할 경우, 예외를 전달 -> CustomAccessDeniedHandler

@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,13 +30,13 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
 
     @Builder
-    public Image(String imageName, Long imageSize, Book book) {
+    private Image(String imageName, Long imageSize) {
         this.imageName = imageName;
         this.imageSize = imageSize;
-        this.book = book;
     }
 
     public void setBook(Book book) {

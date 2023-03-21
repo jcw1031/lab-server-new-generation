@@ -1,10 +1,9 @@
 package knu.networksecuritylab.appserver.service.file;
 
 import knu.networksecuritylab.appserver.entity.book.Image;
-import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
-import knu.networksecuritylab.appserver.exception.file.FileErrorCode;
 import knu.networksecuritylab.appserver.exception.file.impl.FileStorageException;
 import knu.networksecuritylab.appserver.exception.file.impl.ImageNotReadable;
+import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ import java.util.UUID;
 public class ImageFileService implements FileService {
 
     private Path fileLocation;
-    //    private final String LOCATION = "C:\\Users\\jcw00\\lab_service_images";
+//    private final String STORAGE_PATH = "C:\\Users\\security915\\지찬우\\lab_service_image";
     private final String STORAGE_PATH = "/Users/jcw/lab_service_images";
 
     @PostConstruct
@@ -38,7 +37,7 @@ public class ImageFileService implements FileService {
         try {
             Files.createDirectories(this.fileLocation);
         } catch (IOException e) {
-            throw new FileStorageException(FileErrorCode.CAN_NOT_CREATE_DIRECTORY);
+            throw new FileStorageException();
         }
     }
 
@@ -46,15 +45,12 @@ public class ImageFileService implements FileService {
     @Transactional
     public List<Image> multipartFilesStoreAndConvertToImages(final List<MultipartFile> multipartFiles)
             throws IOException {
-        log.info("ImageFileService.parseFiles() start");
         List<Image> images = new ArrayList<>();
         if (CollectionUtils.isEmpty(multipartFiles)) {
-            log.info("files is empty");
             return images;
         }
 
         for (MultipartFile multipartFile : multipartFiles) {
-            log.info("MultipartFile List Parsing Start");
             if (multipartFile.isEmpty()) {
                 break;
             }
@@ -77,8 +73,6 @@ public class ImageFileService implements FileService {
             images.add(image);
         }
 
-        log.info("MultipartFile List Parsing End");
-        log.info("images size = {}", images.size());
         return images;
     }
 
@@ -90,7 +84,7 @@ public class ImageFileService implements FileService {
             return ".png";
         }
 
-        throw new InvalidFileExtensionException(FileErrorCode.INVALID_FILE_EXTENSION);
+        throw new InvalidFileExtensionException();
     }
 
     @Override
@@ -100,7 +94,17 @@ public class ImageFileService implements FileService {
                     new FileInputStream(STORAGE_PATH + File.separator + image.getImageName());
             return fileInputStream.readAllBytes();
         } catch (IOException e) {
-            throw new ImageNotReadable(FileErrorCode.IMAGE_NOT_READABLE);
+            throw new ImageNotReadable();
+        }
+    }
+
+    @Override
+    public void removeImages(List<String> imageNameList) {
+        for (String imageName : imageNameList) {
+            try {
+                Files.delete(Paths.get(STORAGE_PATH + File.separator + imageName));
+            } catch (IOException ignored) {
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.book.BookException;
 
 public class BookNotFoundException extends BookException {
 
-    public BookNotFoundException(BookErrorCode bookErrorCode) {
-        super(bookErrorCode);
+    public BookNotFoundException() {
+        super(BookErrorCode.BOOK_NOT_FOUND);
     }
 }

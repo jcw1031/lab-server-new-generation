@@ -12,4 +12,6 @@ public interface FileService {
             throws IOException;
 
     byte[] imageConvertToBytes(Image image);
+
+    void removeImages(List<String> imageNameList);
 }

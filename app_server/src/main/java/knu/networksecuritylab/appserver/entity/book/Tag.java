@@ -25,13 +25,20 @@ public class Tag {
     @Column(name = "tag_id")
     private Long id;
     @NotBlank(message = "책 태그 이름은 비어있을 수 없습니다.")
+    @Column(unique = true)
     private String tagName;
 
     @OneToMany(mappedBy = "tag")
     private final List<BookTag> bookTags = new ArrayList<>();
 
     @Builder
-    public Tag(String tagName) {
+    private Tag(String tagName) {
         this.tagName = tagName;
+    }
+
+    public static Tag from(String tagName) {
+        return Tag.builder()
+                .tagName(tagName)
+                .build();
     }
 }

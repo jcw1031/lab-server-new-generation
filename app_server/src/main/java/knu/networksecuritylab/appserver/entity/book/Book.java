@@ -36,21 +36,21 @@ public class Book {
     @PositiveOrZero(message = "책 재고는 0 또는 양수이어야 합니다.")
     private int bookStock;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookTag> bookTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
+    private Book(String bookName, String bookAuthor, String bookPublisher, int bookStock) {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
         this.bookStock = bookStock;
     }
 
-    public static Book of(BookRegisterRequestDto bookRegisterRequestDto) {
+    public static Book from(BookRegisterRequestDto bookRegisterRequestDto) {
         return Book.builder()
                 .bookName(bookRegisterRequestDto.getBookName())
                 .bookAuthor(bookRegisterRequestDto.getBookAuthor())
@@ -59,11 +59,12 @@ public class Book {
                 .build();
     }
 
-    public BookListResponseDto toBookListDto() {
+    public BookListResponseDto toBookListDto(List<String> tagList) {
         return BookListResponseDto.builder()
                 .id(this.id)
                 .bookName(this.bookName)
                 .bookAuthor(this.bookAuthor)
+                .bookTagList(tagList)
                 .build();
     }
 

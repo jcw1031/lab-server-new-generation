@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -20,9 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.persistence.JoinColumn;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
@@ -38,38 +36,26 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
     @Column(unique = true)
-    @NotBlank(message = "학번은 비어있을 수 없습니다.")
-    @Pattern(regexp = "^\\d{9}$", message = "학번 형식이 맞지 않습니다. (9자리 정수)")
     private String studentId;
-
-    @NotBlank(message = "비밀번호는 비어있을 수 없습니다.")
     private String password;
-
-    @NotBlank(message = "이메일은 비어있을 수 없습니다.")
-    @Email(message = "이메일 형식이 맞지 않습니다.")
     private String email;
-
-    @NotBlank(message = "이름은 비어있을 수 없습니다.")
     private String name;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Position position = Position.MEMBER;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role_name")
     private List<String> roles;
 
     @Builder
-    public User(Long id, String studentId, String password, String email, String name,
-                Position position, List<String> roles) {
-        this.id = id;
+    private User(String studentId, String password, String email, String name, List<String> roles) {
         this.studentId = studentId;
         this.password = password;
         this.email = email;
         this.name = name;
-        this.position = position;
         this.roles = roles;
     }
 
@@ -114,7 +100,7 @@ public class User implements UserDetails {
                 .build();
     }
 
-    public UserInfoResponseDto toDto() {
+    public UserInfoResponseDto toUserInfoDto() {
         return UserInfoResponseDto.builder()
                 .studentId(this.studentId)
                 .name(this.name)

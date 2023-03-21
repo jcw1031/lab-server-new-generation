@@ -5,7 +5,7 @@ import knu.networksecuritylab.appserver.exception.user.UserException;
 
 public class UsernameDuplicateException extends UserException {
 
-    public UsernameDuplicateException(UserErrorCode userErrorCode) {
-        super(userErrorCode);
+    public UsernameDuplicateException() {
+        super(UserErrorCode.STUDENT_ID_DUPLICATE);
     }
 }
