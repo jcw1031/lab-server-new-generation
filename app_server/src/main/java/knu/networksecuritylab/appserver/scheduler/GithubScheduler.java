@@ -18,7 +18,7 @@ public class GithubScheduler {
 
     private final GithubService githubService;
 
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     @Async
     public void githubApi() {
         log.info("Github Repository 언어 사용량 통계 갱신 time: " + new Date());
