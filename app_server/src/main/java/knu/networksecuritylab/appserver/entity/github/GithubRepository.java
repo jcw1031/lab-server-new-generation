@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.entity.github;
 
-import knu.networksecuritylab.appserver.controller.github.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.api.dto.OrganizationRepositoryDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,23 +24,27 @@ public class GithubRepository {
     private Long id;
     private String repositoryName;
     private String repositoryDescription;
+    private String updateDate;
 
     @OneToMany(mappedBy = "githubRepository",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RepositoryLanguage> repositoryLanguages = new ArrayList<>();
 
     @Builder
-    public GithubRepository(Long id, String repositoryName, String repositoryDescription) {
+    public GithubRepository(Long id, String repositoryName, String repositoryDescription,
+                            String updateDate) {
         this.id = id;
         this.repositoryName = repositoryName;
         this.repositoryDescription = repositoryDescription;
+        this.updateDate = updateDate;
     }
 
-    public static GithubRepository from(OrganizationRepositoryDto repositoryDto) {
+    public static GithubRepository from(final OrganizationRepositoryDto repositoryDto) {
         return GithubRepository.builder()
                 .id(repositoryDto.getId())
                 .repositoryName(repositoryDto.getName())
                 .repositoryDescription(repositoryDto.getDescription())
+                .updateDate(repositoryDto.getUpdateAt())
                 .build();
     }
 }

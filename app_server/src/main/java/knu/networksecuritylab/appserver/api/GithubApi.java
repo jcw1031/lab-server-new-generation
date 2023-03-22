@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.api;
 
-import knu.networksecuritylab.appserver.controller.github.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.api.dto.OrganizationRepositoryDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Component;
