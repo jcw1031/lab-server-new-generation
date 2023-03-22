@@ -27,7 +27,7 @@ public class GithubRepository {
     private String updateDate;
 
     @OneToMany(mappedBy = "githubRepository",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<RepositoryLanguage> repositoryLanguages = new ArrayList<>();
 
     @Builder
