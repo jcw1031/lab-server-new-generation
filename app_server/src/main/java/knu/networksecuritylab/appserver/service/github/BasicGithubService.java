@@ -2,7 +2,8 @@ package knu.networksecuritylab.appserver.service.github;
 
 import knu.networksecuritylab.appserver.api.GithubApi;
 import knu.networksecuritylab.appserver.controller.github.dto.LanguageRateResponseDto;
-import knu.networksecuritylab.appserver.controller.github.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.api.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.controller.github.dto.RepositoryListResponseDto;
 import knu.networksecuritylab.appserver.entity.github.GithubRepository;
 import knu.networksecuritylab.appserver.entity.github.LanguageRate;
 import knu.networksecuritylab.appserver.entity.github.RepositoryLanguage;
@@ -82,5 +83,17 @@ public class BasicGithubService implements GithubService {
         }
 
         return languageRateList;
+    }
+
+    @Override
+    public List<RepositoryListResponseDto> organizationRepositoryList() {
+        List<RepositoryListResponseDto> repositoryList = new ArrayList<>();
+
+        List<GithubRepository> repositories = githubRepoRepository.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+        for (GithubRepository repository : repositories) {
+            repositoryList.add(RepositoryListResponseDto.from(repository));
+        }
+
+        return repositoryList;
     }
 }

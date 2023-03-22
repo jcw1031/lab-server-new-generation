@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.controller.github;
 
 import knu.networksecuritylab.appserver.controller.github.dto.LanguageRateResponseDto;
+import knu.networksecuritylab.appserver.controller.github.dto.RepositoryListResponseDto;
 import knu.networksecuritylab.appserver.service.github.GithubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,11 @@ public class GithubController {
     public ResponseEntity<List<LanguageRateResponseDto>> githubOrganizationLanguagesRateInfo() {
         List<LanguageRateResponseDto> languageRateList = githubService.organizationLanguagesRate();
         return ResponseEntity.ok().body(languageRateList);
+    }
+
+    @GetMapping("/repositories")
+    public ResponseEntity<List<RepositoryListResponseDto>> githubRepositoryListInfo() {
+        List<RepositoryListResponseDto> repositoryList = githubService.organizationRepositoryList();
+        return ResponseEntity.ok().body(repositoryList);
     }
 }
