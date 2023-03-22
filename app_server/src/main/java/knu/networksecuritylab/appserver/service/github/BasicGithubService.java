@@ -38,10 +38,10 @@ public class BasicGithubService implements GithubService {
             GithubRepository githubRepository = GithubRepository.from(organizationRepository);
             String repositoryName = githubRepository.getRepositoryName();
 
+            githubRepoRepository.save(githubRepository);
+
             Map repositoryLanguagesMap = githubApi.getRepositoryLanguages(repositoryName);
             mappingRepositoryAndLanguages(githubRepository, repositoryLanguagesMap);
-
-            githubRepoRepository.save(githubRepository);
         }
     }
 
