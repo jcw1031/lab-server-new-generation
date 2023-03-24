@@ -1,8 +1,8 @@
 package knu.networksecuritylab.appserver.service.github;
 
 import knu.networksecuritylab.appserver.api.GithubApi;
-import knu.networksecuritylab.appserver.controller.github.dto.LanguageRateResponseDto;
 import knu.networksecuritylab.appserver.api.dto.OrganizationRepositoryDto;
+import knu.networksecuritylab.appserver.controller.github.dto.LanguageRateResponseDto;
 import knu.networksecuritylab.appserver.controller.github.dto.RepositoryListResponseDto;
 import knu.networksecuritylab.appserver.entity.github.GithubRepository;
 import knu.networksecuritylab.appserver.entity.github.LanguageRate;
@@ -42,23 +42,20 @@ public class BasicGithubService implements GithubService {
             GithubRepository githubRepository = GithubRepository.from(organizationRepository);
             String repositoryName = githubRepository.getRepositoryName();
 
-            githubRepoRepository.save(githubRepository);
-
             Map repositoryLanguagesMap = githubApi.getRepositoryLanguages(repositoryName);
             mappingRepositoryAndLanguages(githubRepository, repositoryLanguagesMap);
+
+            githubRepoRepository.save(githubRepository);
         }
     }
 
-    private void mappingRepositoryAndLanguages(
-            GithubRepository repository, Map languages
-    ) {
+    private void mappingRepositoryAndLanguages(GithubRepository repository, Map languages) {
         for (Object languageName : languages.keySet()) {
             Long languageBytes = Long.parseLong(String.valueOf(languages.get(languageName)));
             RepositoryLanguage repositoryLanguage =
                     RepositoryLanguage.of(String.valueOf(languageName), languageBytes);
 
             repositoryLanguage.setGithubRepository(repository);
-            languageRepository.save(repositoryLanguage);
         }
     }
 
@@ -77,7 +74,8 @@ public class BasicGithubService implements GithubService {
     public List<LanguageRateResponseDto> organizationLanguagesRate() {
         List<LanguageRateResponseDto> languageRateList = new ArrayList<>();
 
-        List<LanguageRate> languageRates = languageRateRepository.findAll(Sort.by(Sort.Direction.DESC, "languageRate"));
+        List<LanguageRate> languageRates =
+                languageRateRepository.findAll(Sort.by(Sort.Direction.DESC, "languageRate"));
         for (LanguageRate languageRate : languageRates) {
             languageRateList.add(LanguageRateResponseDto.from(languageRate));
         }
@@ -89,7 +87,8 @@ public class BasicGithubService implements GithubService {
     public List<RepositoryListResponseDto> organizationRepositoryList() {
         List<RepositoryListResponseDto> repositoryList = new ArrayList<>();
 
-        List<GithubRepository> repositories = githubRepoRepository.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+        List<GithubRepository> repositories =
+                githubRepoRepository.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
         for (GithubRepository repository : repositories) {
             repositoryList.add(RepositoryListResponseDto.from(repository));
         }

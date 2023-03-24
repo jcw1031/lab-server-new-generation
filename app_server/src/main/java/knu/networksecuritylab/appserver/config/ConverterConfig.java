@@ -1,6 +1,6 @@
 package knu.networksecuritylab.appserver.config;
 
-import knu.networksecuritylab.appserver.common.JsonToBookRegisterRequestDtoObject;
+import knu.networksecuritylab.appserver.common.BookRegisterRequestDtoConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @RequiredArgsConstructor
 public class ConverterConfig extends WebMvcConfigurationSupport {
 
-    private final JsonToBookRegisterRequestDtoObject jsonToBookRegisterRequestDtoObject;
+    private final BookRegisterRequestDtoConverter bookRegisterRequestDtoConverter;
 
     @Override
     protected void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(jsonToBookRegisterRequestDtoObject);
+        registry.addConverter(bookRegisterRequestDtoConverter);
     }
 }

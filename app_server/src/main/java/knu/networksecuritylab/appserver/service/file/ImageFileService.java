@@ -6,7 +6,6 @@ import knu.networksecuritylab.appserver.exception.file.impl.ImageNotReadable;
 import knu.networksecuritylab.appserver.exception.file.impl.InvalidFileExtensionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +22,6 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 public class ImageFileService implements FileService {
 
     private Path fileLocation;
@@ -42,7 +40,6 @@ public class ImageFileService implements FileService {
     }
 
     @Override
-    @Transactional
     public List<Image> multipartFilesStoreAndConvertToImages(final List<MultipartFile> multipartFiles)
             throws IOException {
         List<Image> images = new ArrayList<>();

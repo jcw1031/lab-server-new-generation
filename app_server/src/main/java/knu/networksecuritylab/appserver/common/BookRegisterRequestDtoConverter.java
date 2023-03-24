@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JsonToBookRegisterRequestDtoObject implements Converter<String, BookRegisterRequestDto> {
+public class BookRegisterRequestDtoConverter implements Converter<String, BookRegisterRequestDto> {
 
     private final ObjectMapper mapper;
 
