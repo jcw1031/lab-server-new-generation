@@ -88,7 +88,7 @@ public class BasicGithubService implements GithubService {
         List<RepositoryListResponseDto> repositoryList = new ArrayList<>();
 
         List<GithubRepository> repositories =
-                githubRepoRepository.findAll(Sort.by(Sort.Direction.DESC, "updateDate"));
+                githubRepoRepository.findAll(Sort.by(Sort.Direction.DESC, "pushedDate"));
         for (GithubRepository repository : repositories) {
             repositoryList.add(RepositoryListResponseDto.from(repository));
         }

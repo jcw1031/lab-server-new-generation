@@ -24,7 +24,7 @@ public class GithubRepository {
     private Long id;
     private String repositoryName;
     private String repositoryDescription;
-    private String updateDate;
+    private String pushedDate;
 
     @OneToMany(mappedBy = "githubRepository",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
@@ -32,11 +32,11 @@ public class GithubRepository {
 
     @Builder
     public GithubRepository(Long id, String repositoryName, String repositoryDescription,
-                            String updateDate) {
+                            String pushedDate) {
         this.id = id;
         this.repositoryName = repositoryName;
         this.repositoryDescription = repositoryDescription;
-        this.updateDate = updateDate;
+        this.pushedDate = pushedDate;
     }
 
     public static GithubRepository from(final OrganizationRepositoryDto repositoryDto) {
@@ -44,7 +44,7 @@ public class GithubRepository {
                 .id(repositoryDto.getId())
                 .repositoryName(repositoryDto.getName())
                 .repositoryDescription(repositoryDto.getDescription())
-                .updateDate(repositoryDto.getUpdateAt())
+                .pushedDate(repositoryDto.getPushedAt())
                 .build();
     }
 }
