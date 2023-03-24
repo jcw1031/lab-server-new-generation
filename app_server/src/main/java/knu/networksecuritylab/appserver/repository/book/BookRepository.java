@@ -23,7 +23,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag ORDER BY RAND()")
     List<Book> findBookRandomList(Pageable pageable);
 
-    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.bookTags bt" +
-            " LEFT JOIN FETCH bt.tag WHERE b.bookName LIKE %:keyword%")
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.bookTags bt LEFT JOIN FETCH bt.tag WHERE b " +
+            "IN (SELECT b FROM Book b LEFT JOIN b.bookTags bt LEFT JOIN bt.tag t " +
+            "WHERE b.bookName LIKE %:keyword% OR t.tagName LIKE %:keyword%)")
     List<Book> searchBookByName(@Param("keyword") String keyword);
 }
