@@ -9,4 +9,8 @@ import lombok.NoArgsConstructor;
 public class DoorStatusDto {
 
     private Boolean isDoorOpen;
+
+    public DoorStatusDto(Boolean isDoorOpen) {
+        this.isDoorOpen = isDoorOpen;
+    }
 }

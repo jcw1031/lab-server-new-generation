@@ -8,4 +8,6 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface IotRepository extends JpaRepository<Door, LocalDateTime> {
+
+    Door findFirstByOrderByCreatedAtDesc();
 }
