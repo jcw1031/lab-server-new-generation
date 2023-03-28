@@ -12,6 +12,6 @@ public class OrganizationRepositoryDto {
     private Long id;
     private String name;
     private String description;
-    @JsonAlias(value = "updated_at")
-    private String updateAt;
+    @JsonAlias(value = "pushed_at")
+    private String pushedAt;
 }
