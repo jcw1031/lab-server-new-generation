@@ -1,4 +1,4 @@
-package knu.networksecuritylab.appserver.controller.dto;
+package knu.networksecuritylab.appserver.controller.iot.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

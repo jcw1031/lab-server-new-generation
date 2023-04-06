@@ -1,10 +1,10 @@
-package knu.networksecuritylab.appserver.controller;
+package knu.networksecuritylab.appserver.controller.iot;
 
-import knu.networksecuritylab.appserver.controller.dto.DoorStatusDto;
-import knu.networksecuritylab.appserver.controller.dto.TemperatureHumidityDto;
+import knu.networksecuritylab.appserver.controller.iot.dto.DoorStatusDto;
+import knu.networksecuritylab.appserver.controller.iot.dto.TemperatureHumidityDto;
 import knu.networksecuritylab.appserver.entity.iot.Door;
 import knu.networksecuritylab.appserver.repository.IotRepository;
-import knu.networksecuritylab.appserver.service.IotService;
+import knu.networksecuritylab.appserver.service.iot.IotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
