@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 
 @Repository
-public interface IotRepository extends JpaRepository<Door, LocalDateTime> {
+public interface DoorRepository extends JpaRepository<Door, LocalDateTime> {
 
     Door findFirstByOrderByCreatedAtDesc();
 }

@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DoorStatusDto {
+public class LightStatusDto {
 
-    @NotNull(message = "문 열림 여부는 null 값일 수 업습니다.")
-    private Boolean isDoorOpen;
+    @NotNull(message = "불 켜짐 여부는 null 값일 수 없습니다.")
+    private Boolean isLightOn;
 
-    public DoorStatusDto(Boolean isDoorOpen) {
-        this.isDoorOpen = isDoorOpen;
+    public LightStatusDto(Boolean isLightOn) {
+        this.isLightOn = isLightOn;
     }
 }
