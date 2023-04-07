@@ -1,6 +1,6 @@
-package knu.networksecuritylab.appserver.service;
+package knu.networksecuritylab.appserver.service.iot;
 
-import knu.networksecuritylab.appserver.controller.dto.TemperatureHumidityDto;
+import knu.networksecuritylab.appserver.controller.iot.dto.TemperatureHumidityDto;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
