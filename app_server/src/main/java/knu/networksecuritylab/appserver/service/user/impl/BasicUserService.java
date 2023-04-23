@@ -94,8 +94,7 @@ public class BasicUserService implements UserService {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);
 
-        User user = userRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByStudentId(studentId).orElseThrow(UserNotFoundException::new);
 
         return user.toUserInfoDto();
     }
@@ -107,8 +106,7 @@ public class BasicUserService implements UserService {
         String token = jwtUtils.resolveToken(authorization);
         String studentId = jwtUtils.getStudentIdInToken(token);
 
-        User user = userRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByStudentId(studentId).orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(withdrawalRequestDto.getPassword(), user.getPassword())) {
             throw new InvalidAuthenticationException();

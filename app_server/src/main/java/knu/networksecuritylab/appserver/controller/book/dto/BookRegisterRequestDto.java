@@ -1,6 +1,8 @@
 package knu.networksecuritylab.appserver.controller.book.dto;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +15,8 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class BookRegisterRequestDto {
 
     @NotBlank(message = "책 이름은 비어있을 수 없습니다.")

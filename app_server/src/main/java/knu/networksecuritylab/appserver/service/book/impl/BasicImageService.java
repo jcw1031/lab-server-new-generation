@@ -20,8 +20,7 @@ public class BasicImageService implements ImageService {
 
     @Override
     public byte[] bookImage(final Long imageId) {
-        Image image = imageRepository.findById(imageId).orElseThrow(() ->
-                new ImageNotFoundException());
+        Image image = imageRepository.findById(imageId).orElseThrow(ImageNotFoundException::new);
         return fileService.imageConvertToBytes(image);
     }
 

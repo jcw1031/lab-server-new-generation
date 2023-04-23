@@ -43,13 +43,12 @@ public class BasicBookService implements BookService {
     public Long registerBook(
             final List<MultipartFile> files,
             final BookRegisterRequestDto bookRegisterRequestDto) throws IOException {
-        List<Tag> tags = tagService.tagArrangement(bookRegisterRequestDto.getBookTagList());
-
         Book book = checkDuplicateBook(bookRegisterRequestDto);
-        fileService.multipartFilesStoreAndConvertToImages(files).forEach(image -> image.setBook(book));
+
+        setBookImages(files, book);
+        setBookTags(bookRegisterRequestDto.getBookTagList(), book);
 
         bookRepository.save(book); // cascade 설정으로 image도 모두 저장
-        bookTagging(tags, book);
         return book.getId();
     }
 
@@ -64,8 +63,18 @@ public class BasicBookService implements BookService {
         return Book.from(bookRegisterRequestDto);
     }
 
-    private void bookTagging(final List<Tag> tags, final Book book) {
-        tags.forEach(tag -> bookTagRepository.save(BookTag.of(book, tag)));
+    private void setBookImages(List<MultipartFile> files, Book book) throws IOException {
+        List<Image> images = fileService.multipartFilesStoreAndConvertToImages(files);
+        for (Image image : images) {
+            image.setBook(book);
+        }
+    }
+
+    private void setBookTags(List<String> bookTagList, Book book) {
+        List<Tag> tags = tagService.tagArrangement(bookTagList);
+        for (Tag tag : tags) {
+            book.addTag(tag);
+        }
     }
 
     @Override
@@ -89,8 +98,7 @@ public class BasicBookService implements BookService {
             imageList = bookImagesToImageIdList(book.getImages());
         }
 
-        book = bookRepository.findByIdWithBookTags(bookId)
-                .orElseThrow(() -> new BookNotFoundException());
+        book = bookRepository.findByIdWithBookTags(bookId).orElseThrow(BookNotFoundException::new);
         List<String> tagList = tagService.bookTagsToTagNameList(book.getBookTags());
 
         return book.toBookInfoDto(tagList, imageList);
@@ -124,8 +132,7 @@ public class BasicBookService implements BookService {
                     List<String> imageNameList = imageService.imagesToImageNameList(book.getImages());
                     fileService.removeImages(imageNameList);
                 });
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException());
+        Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
         bookRepository.delete(book);
     }
 }
