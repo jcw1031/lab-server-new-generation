@@ -36,10 +36,10 @@ public class Book {
     @PositiveOrZero(message = "책 재고는 0 또는 양수이어야 합니다.")
     private int bookStock;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<BookTag> bookTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Image> images = new ArrayList<>();
 
     @Builder
@@ -77,5 +77,9 @@ public class Book {
                 .bookTagList(tagList)
                 .bookImageList(imageList)
                 .build();
+    }
+
+    public void addTag(final Tag tag) {
+        this.bookTags.add(BookTag.of(this, tag));
     }
 }

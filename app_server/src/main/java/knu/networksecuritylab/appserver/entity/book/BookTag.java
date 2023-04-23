@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +26,6 @@ public class BookTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,12 +39,9 @@ public class BookTag {
     }
 
     public static BookTag of(Book book, Tag tag) {
-        BookTag bookTag = BookTag.builder()
+        return BookTag.builder()
                 .book(book)
                 .tag(tag)
                 .build();
-        book.getBookTags().add(bookTag);
-        tag.getBookTags().add(bookTag);
-        return bookTag;
     }
 }
