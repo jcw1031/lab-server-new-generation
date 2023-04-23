@@ -25,7 +25,7 @@ import java.util.UUID;
 public class ImageFileService implements FileService {
 
     private Path fileLocation;
-//    private final String STORAGE_PATH = "C:\\Users\\Administrator\\lab-service\\lab_service_image";
+    //    private final String STORAGE_PATH = "C:\\Users\\Administrator\\lab-service\\lab_service_image";
     private final String STORAGE_PATH = "/Users/jcw/lab_service_images";
 
     @PostConstruct
@@ -48,29 +48,34 @@ public class ImageFileService implements FileService {
         }
 
         for (MultipartFile multipartFile : multipartFiles) {
-            if (multipartFile.isEmpty()) {
-                break;
-            }
+            String storedFileName = multipartFileStore(multipartFile);
 
-            String extension = getFileExtension(multipartFile);
-
-            String uuid = UUID.randomUUID().toString();
-            String fileName = uuid + extension;
-            File file = new File(fileLocation + File.separator + fileName);
-            multipartFile.transferTo(file);
-
-            file.setWritable(true);
-            file.setReadable(true);
-
-            long fileSize = multipartFile.getSize();
-            Image image = Image.builder()
-                    .imageName(fileName)
-                    .imageSize(fileSize)
-                    .build();
+            Image image = convertToImage(multipartFile, storedFileName);
             images.add(image);
         }
 
         return images;
+    }
+
+    private static Image convertToImage(MultipartFile multipartFile, String fileName) {
+        long fileSize = multipartFile.getSize();
+        Image image = Image.builder()
+                .imageName(fileName)
+                .imageSize(fileSize)
+                .build();
+        return image;
+    }
+
+    private String multipartFileStore(MultipartFile multipartFile) throws IOException {
+        String extension = getFileExtension(multipartFile);
+        String uuid = UUID.randomUUID().toString();
+        String fileName = uuid + extension;
+        File file = new File(fileLocation + File.separator + fileName);
+        multipartFile.transferTo(file);
+
+        file.setWritable(true);
+        file.setReadable(true);
+        return fileName;
     }
 
     private String getFileExtension(MultipartFile multipartFile) {

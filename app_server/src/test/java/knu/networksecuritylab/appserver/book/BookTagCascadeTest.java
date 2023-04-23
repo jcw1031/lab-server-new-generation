@@ -7,6 +7,7 @@ import knu.networksecuritylab.appserver.repository.book.BookRepository;
 import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
 import knu.networksecuritylab.appserver.service.book.BookService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,28 @@ public class BookTagCascadeTest {
     Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
+    @DisplayName("영속성 전이 - persist")
+    void bookTagCascadePersistTest() throws Exception {
+        // given
+        BookRegisterRequestDto bookRegisterRequestDto = BookRegisterRequestDto.builder()
+                .bookName("test")
+                .bookAuthor("test")
+                .bookPublisher("test")
+                .bookStock(2)
+                .bookTagList(List.of("test1", "test2", "test3"))
+                .build();
+
+        // when
+        Long bookId = bookService.registerBook(null, bookRegisterRequestDto);
+        Book book = bookRepository.findById(bookId).orElse(null);
+        List<BookTag> bookTags = bookTagRepository.findByBook(book);
+
+        // then
+        assertThat(bookTags.size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("영속성 전이 - remove")
     void bookTagCascadeRemoveTest() throws Exception {
         // given
         BookRegisterRequestDto bookRegisterRequestDto = BookRegisterRequestDto.builder()
@@ -54,25 +77,5 @@ public class BookTagCascadeTest {
         // then
         Assertions.assertThrows(Exception.class, () ->
                 bookTagRepository.findById(bookTagId).orElseThrow(RuntimeException::new));
-    }
-
-    @Test
-    void bookTagCascadeSaveTest() throws Exception {
-        // given
-        BookRegisterRequestDto bookRegisterRequestDto = BookRegisterRequestDto.builder()
-                .bookName("test")
-                .bookAuthor("test")
-                .bookPublisher("test")
-                .bookStock(2)
-                .bookTagList(List.of("test1", "test2", "test3"))
-                .build();
-
-        // when
-        Long bookId = bookService.registerBook(null, bookRegisterRequestDto);
-        Book book = bookRepository.findById(bookId).orElse(null);
-        List<BookTag> bookTags = bookTagRepository.findByBook(book);
-
-        // then
-        assertThat(bookTags.size()).isEqualTo(3);
     }
 }

@@ -10,7 +10,6 @@ import knu.networksecuritylab.appserver.entity.book.Tag;
 import knu.networksecuritylab.appserver.exception.book.impl.BookDuplicateException;
 import knu.networksecuritylab.appserver.exception.book.impl.BookNotFoundException;
 import knu.networksecuritylab.appserver.repository.book.BookRepository;
-import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
 import knu.networksecuritylab.appserver.service.book.BookService;
 import knu.networksecuritylab.appserver.service.book.ImageService;
 import knu.networksecuritylab.appserver.service.book.TagService;
@@ -36,7 +35,6 @@ public class BasicBookService implements BookService {
     private final TagService tagService;
     private final FileService fileService;
     private final ImageService imageService;
-    private final BookTagRepository bookTagRepository;
 
     @Override
     @Transactional
@@ -92,13 +90,10 @@ public class BasicBookService implements BookService {
 
     @Override
     public BookInfoResponseDto bookInfo(final Long bookId) {
-        List<Long> imageList = new ArrayList<>();
-        Book book = bookRepository.findByIdIfImagesExists(bookId).orElse(null);
-        if (book != null) {
-            imageList = bookImagesToImageIdList(book.getImages());
-        }
+        Book book = bookRepository.findByIdWithBookTags(bookId)
+                .orElseThrow(BookNotFoundException::new);
 
-        book = bookRepository.findByIdWithBookTags(bookId).orElseThrow(BookNotFoundException::new);
+        List<Long> imageList = bookImagesToImageIdList(book.getImages());
         List<String> tagList = tagService.bookTagsToTagNameList(book.getBookTags());
 
         return book.toBookInfoDto(tagList, imageList);
@@ -127,12 +122,9 @@ public class BasicBookService implements BookService {
     @Override
     @Transactional
     public void removeBook(Long bookId) {
-        bookRepository.findByIdIfImagesExists(bookId)
-                .ifPresent(book -> {
-                    List<String> imageNameList = imageService.imagesToImageNameList(book.getImages());
-                    fileService.removeImages(imageNameList);
-                });
         Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
+        List<String> imageNameList = imageService.imagesToImageNameList(book.getImages());
+        fileService.removeImages(imageNameList);
         bookRepository.delete(book);
     }
 }

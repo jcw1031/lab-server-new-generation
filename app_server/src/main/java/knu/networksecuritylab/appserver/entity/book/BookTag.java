@@ -39,12 +39,9 @@ public class BookTag {
     }
 
     public static BookTag of(Book book, Tag tag) {
-        BookTag bookTag = BookTag.builder()
+        return BookTag.builder()
                 .book(book)
                 .tag(tag)
                 .build();
-        book.getBookTags().add(bookTag);
-        tag.getBookTags().add(bookTag);
-        return bookTag;
     }
 }

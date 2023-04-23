@@ -13,9 +13,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByBookName(String bookName);
 
-    @Query("SELECT b FROM Book b JOIN FETCH b.images WHERE b.id = :bookId")
-    Optional<Book> findByIdIfImagesExists(@Param("bookId") Long id);
-
     @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookTags bt" +
             " LEFT JOIN FETCH bt.tag WHERE b.id = :bookId")
     Optional<Book> findByIdWithBookTags(@Param("bookId") Long id);
