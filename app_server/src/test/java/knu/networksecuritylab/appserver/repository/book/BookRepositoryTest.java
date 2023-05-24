@@ -1,6 +1,7 @@
 package knu.networksecuritylab.appserver.repository.book;
 
-import knu.networksecuritylab.appserver.entity.book.Book;
+import knu.networksecuritylab.appserver.app.entity.book.Book;
+import knu.networksecuritylab.appserver.app.repository.book.BookRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
