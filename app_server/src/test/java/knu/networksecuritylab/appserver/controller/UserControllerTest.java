@@ -1,8 +1,8 @@
 package knu.networksecuritylab.appserver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import knu.networksecuritylab.appserver.controller.user.dto.SignInRequestDto;
-import knu.networksecuritylab.appserver.controller.user.dto.SignUpRequestDto;
+import knu.networksecuritylab.appserver.app.controller.user.dto.SignInRequestDto;
+import knu.networksecuritylab.appserver.app.controller.user.dto.SignUpRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

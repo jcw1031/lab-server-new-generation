@@ -1,11 +1,11 @@
 package knu.networksecuritylab.appserver.book;
 
-import knu.networksecuritylab.appserver.controller.book.dto.BookRegisterRequestDto;
-import knu.networksecuritylab.appserver.entity.book.Book;
-import knu.networksecuritylab.appserver.entity.book.BookTag;
-import knu.networksecuritylab.appserver.repository.book.BookRepository;
-import knu.networksecuritylab.appserver.repository.book.BookTagRepository;
-import knu.networksecuritylab.appserver.service.book.BookService;
+import knu.networksecuritylab.appserver.app.controller.book.dto.BookRegisterRequestDto;
+import knu.networksecuritylab.appserver.app.entity.book.Book;
+import knu.networksecuritylab.appserver.app.entity.book.BookTag;
+import knu.networksecuritylab.appserver.app.repository.book.BookRepository;
+import knu.networksecuritylab.appserver.app.repository.book.BookTagRepository;
+import knu.networksecuritylab.appserver.app.service.book.BookService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
